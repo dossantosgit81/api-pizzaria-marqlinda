@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CustomerReqDto {
     private String name;
+    private String lastName;
     private String phone;
     private List<AddressDto> address;
 }
