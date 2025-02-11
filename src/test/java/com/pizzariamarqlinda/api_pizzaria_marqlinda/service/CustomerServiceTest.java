@@ -1,6 +1,7 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Customer;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.AddressDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CustomerReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.repository.CustomerRepository;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.service.CustomerServiceImpl;
@@ -12,6 +13,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -25,12 +28,17 @@ public class CustomerServiceTest {
 
     CustomerReqDto newCustomer;
     Customer savedCustomer;
+    AddressDto addressDto;
 
     @BeforeEach
     public void setUp(){
         newCustomer = new CustomerReqDto();
+        addressDto = new AddressDto(1L, "Barreiras", "ES", "BRASIL", "Natal", 452, "8899898855", "Joaquim almeida", "Endereco 1");
+
         newCustomer.setName("Rafael");
+        newCustomer.setLastName("Mendes");
         newCustomer.setPhone("6165698754");
+        newCustomer.setAddresses(List.of(addressDto));
 
         savedCustomer = new Customer();
         savedCustomer.setId(1L);
