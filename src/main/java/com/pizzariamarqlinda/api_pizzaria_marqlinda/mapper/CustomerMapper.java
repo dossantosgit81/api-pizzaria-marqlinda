@@ -1,4 +1,4 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.mapper;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Customer;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CustomerReqDto;

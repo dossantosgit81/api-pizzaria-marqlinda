@@ -12,5 +12,4 @@ public class CustomerReqDto {
     private String name;
     private String lastName;
     private String phone;
-    private List<AddressDto> addresses;
 }

@@ -2,7 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.resource;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CustomerReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CustomerResDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.service.CustomerService;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

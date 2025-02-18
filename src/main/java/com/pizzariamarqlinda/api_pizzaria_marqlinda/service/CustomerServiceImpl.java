@@ -1,13 +1,11 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.service;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Cart;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Customer;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CustomerReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CustomerResDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.mapper.CustomerMapper;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.repository.CustomerRepository;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.CustomerMapper;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

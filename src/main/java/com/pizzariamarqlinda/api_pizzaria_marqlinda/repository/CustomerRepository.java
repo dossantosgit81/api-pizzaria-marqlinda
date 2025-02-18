@@ -1,4 +1,4 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.repository;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.repository;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;

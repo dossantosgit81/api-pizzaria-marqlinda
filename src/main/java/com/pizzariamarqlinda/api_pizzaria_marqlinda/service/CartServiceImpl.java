@@ -1,7 +1,7 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.service;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Cart;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.repository.CartRepository;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.CartRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
