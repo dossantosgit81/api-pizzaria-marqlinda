@@ -2,8 +2,6 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto;
 
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter
 @AllArgsConstructor
