@@ -1,28 +1,44 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import io.hypersistence.utils.hibernate.type.array.ListArrayType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "customers")
-public class Customer {
+public class Customer implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
+    @Column(name = "last_name")
     private String lastName;
+
     private String phone;
-    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
-    private List<Address> addresses;
+
+    @Column(unique = true)
+    private String login;
+
+    @Column(length = 300)
+    private String password;
+
+    @Type(ListArrayType.class)
+    @Column(columnDefinition = "varchar[]")
+    private List<String> roles;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Cart cart;
 }
