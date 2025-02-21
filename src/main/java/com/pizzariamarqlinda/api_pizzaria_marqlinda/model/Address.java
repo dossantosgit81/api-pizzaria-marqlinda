@@ -21,5 +21,5 @@ public class Address {
     private String neghborhood;
     private String title;
     @ManyToOne
-    private Customer customer;
+    private User user;
 }

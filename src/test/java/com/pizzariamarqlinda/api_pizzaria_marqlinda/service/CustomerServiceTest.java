@@ -1,9 +1,9 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Customer;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.AddressDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CustomerReqDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.CustomerRepository;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,18 +20,18 @@ import java.util.List;
 public class CustomerServiceTest {
 
     @InjectMocks
-    private CustomerServiceImpl service;
+    private UserServiceImpl service;
 
     @Mock
-    private CustomerRepository repository;
+    private UserRepository repository;
 
-    CustomerReqDto newCustomer;
-    Customer savedCustomer;
+    UserReqDto newCustomer;
+    User savedCustomer;
     AddressDto addressDto;
 
     @BeforeEach
     public void setUp(){
-        newCustomer = new CustomerReqDto();
+        newCustomer = new UserReqDto();
         addressDto = new AddressDto(1L, "Barreiras", "ES", "BRASIL", "Natal", 452, "8899898855", "Joaquim almeida", "Endereco 1");
 
         newCustomer.setName("Rafael");
@@ -39,7 +39,7 @@ public class CustomerServiceTest {
         newCustomer.setPhone("6165698754");
         newCustomer.setAddresses(List.of(addressDto));
 
-        savedCustomer = new Customer();
+        savedCustomer = new User();
         savedCustomer.setId(1L);
 
         Mockito.when(repository.save(Mockito.any())).thenReturn(savedCustomer);
@@ -48,6 +48,6 @@ public class CustomerServiceTest {
     @Test
     public void deveCadastrarCustomerComSucesso(){
         Assertions.assertEquals(service.save(newCustomer), 1L);
-        Mockito.verify(repository).save(Mockito.any(Customer.class));
+        Mockito.verify(repository).save(Mockito.any(User.class));
     }
 }

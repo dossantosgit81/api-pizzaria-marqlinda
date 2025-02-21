@@ -1,15 +1,12 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto;
 
-import jakarta.persistence.Column;
 import lombok.*;
-
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerReqDto {
+public class UserReqDto {
     private String name;
     private String lastName;
     private String phone;
