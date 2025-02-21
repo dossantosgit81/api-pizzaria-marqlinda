@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,16 @@ public class RoleServiceImpl implements RoleService {
     public List<RoleDto> all() {
         return repository.findAll().stream()
                 .map(mapper::entityToRoleDto).toList();
+    }
+
+    @Override
+    public void delete(Long id) {
+        Optional<Role> role = repository.findById(id);
+        if(role.isEmpty()){
+            throw new RuntimeException("Usuário inexistente.");
+        }else {
+            repository.delete(role.get());
+        }
     }
 
 }

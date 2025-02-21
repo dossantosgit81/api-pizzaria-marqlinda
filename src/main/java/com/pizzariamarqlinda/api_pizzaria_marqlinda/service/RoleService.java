@@ -7,4 +7,6 @@ import java.util.List;
 public interface RoleService {
     Long Save (RoleDto  role);
     List<RoleDto> all();
+    void delete(Long id);
+
 }

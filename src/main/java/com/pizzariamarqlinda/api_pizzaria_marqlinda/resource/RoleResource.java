@@ -31,4 +31,10 @@ public class RoleResource {
     public ResponseEntity<List<RoleDto>> findAll(){
         return ResponseEntity.ok(service.all());
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> findAll(@PathVariable("id") Long id){
+        service.delete(id);
+        return ResponseEntity.ok().build();
+    }
 }
