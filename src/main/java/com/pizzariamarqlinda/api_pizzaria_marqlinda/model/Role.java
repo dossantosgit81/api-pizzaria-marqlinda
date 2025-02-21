@@ -6,12 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Table(name = "roles")
+@EqualsAndHashCode(of = "id")
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
-@Table(name = "carts")
-public class Cart {
+public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String description;
+
 }

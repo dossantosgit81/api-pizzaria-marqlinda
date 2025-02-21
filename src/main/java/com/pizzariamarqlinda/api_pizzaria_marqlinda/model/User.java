@@ -2,6 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.model;
 
 import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
@@ -13,7 +14,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "customers")
+@EqualsAndHashCode(of = "id")
+@Table(name = "users")
 public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

@@ -1,4 +1,4 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.service.impl;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.UserMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Cart;
@@ -6,6 +6,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,4 +41,6 @@ public class UserServiceImpl implements UserService {
                 .map(mapper::entityToUserResDto)
                 .toList();
     }
+
+
 }
