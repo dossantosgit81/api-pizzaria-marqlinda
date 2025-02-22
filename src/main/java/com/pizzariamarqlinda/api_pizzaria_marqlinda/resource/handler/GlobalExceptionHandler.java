@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorResponseDto methodNotValidArgumentException(MethodArgumentNotValidException ex){
         List<FieldErrorDto> errors = ex.getFieldErrors().stream().map(e -> new FieldErrorDto(e.getField(), e.getDefaultMessage())).toList();
-        return new ErrorResponseDto(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro de validação.", errors);
+        return new ErrorResponseDto(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Há campos inválidos.", errors);
     }
 
 }

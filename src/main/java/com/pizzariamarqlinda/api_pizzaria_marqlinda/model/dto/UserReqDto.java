@@ -1,7 +1,11 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -17,7 +21,8 @@ public class UserReqDto {
     @NotBlank(message = messageError)
     private String phone;
     @NotBlank(message = messageError)
-    private String login;
+    @Email(message = "Email inválido.")
+    private String email;
     @NotBlank(message = messageError)
     private String password;
 }

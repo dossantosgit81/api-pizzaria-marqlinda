@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Long save(UserReqDto user) {
-        repository.findByLogin(user.getLogin());
+      //  repository.findByLogin(user.getEmail());
         User userConverted = mapper.userReqDtoToEntity(user);
         String password = user.getPassword();
         userConverted.setPassword(encoder.encode(password));

@@ -3,7 +3,6 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.service.impl;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.RoleMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.RoleRepository;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.RoleService;
 import lombok.RequiredArgsConstructor;

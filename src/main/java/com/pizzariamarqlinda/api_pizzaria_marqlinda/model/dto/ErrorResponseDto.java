@@ -9,7 +9,7 @@ public record ErrorResponseDto(int status, String message, List<FieldErrorDto> e
         return new ErrorResponseDto(HttpStatus.BAD_REQUEST.value(), message, List.of());
     }
 
-    public static ErrorResponseDto conflito(String message){
+    public static ErrorResponseDto responseConflict(String message){
         return new ErrorResponseDto(HttpStatus.CONFLICT.value(), message, List.of());
     }
 }
