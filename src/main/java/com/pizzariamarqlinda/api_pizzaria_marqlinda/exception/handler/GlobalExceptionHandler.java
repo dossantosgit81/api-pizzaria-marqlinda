@@ -1,5 +1,6 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.resource.handler;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.handler;
 
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ErrorResponseDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.FieldErrorDto;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,12 @@ public class GlobalExceptionHandler {
     public ErrorResponseDto methodNotValidArgumentException(MethodArgumentNotValidException ex){
         List<FieldErrorDto> errors = ex.getFieldErrors().stream().map(e -> new FieldErrorDto(e.getField(), e.getDefaultMessage())).toList();
         return new ErrorResponseDto(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Há campos inválidos.", errors);
+    }
+
+    @ExceptionHandler(ObjectAlreadyExists.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseDto objectAlreadyExists(ObjectAlreadyExists ex){
+        return ErrorResponseDto.responseConflict(ex.getMessage());
     }
 
 }
