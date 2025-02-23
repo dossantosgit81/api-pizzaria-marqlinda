@@ -24,9 +24,9 @@ public class UserServiceImpl implements UserService {
     private final UserMapper mapper = UserMapper.INSTANCE;
     private final UserRepository repository;
     @Setter
+    @Autowired
     private PasswordEncoder encoder;
 
-    @Transactional
     @Override
     public Long save(UserReqDto user) {
         this.validateLogin(user.getEmail());

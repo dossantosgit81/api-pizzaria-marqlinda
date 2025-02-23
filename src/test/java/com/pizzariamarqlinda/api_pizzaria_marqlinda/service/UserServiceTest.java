@@ -32,9 +32,7 @@ public class UserServiceTest {
 
     UserReqDto newUserSuccess;
     User savedUser;
-    UserReqDto userEmailExists;
     UserReqDto userReqExistsEmail = new UserReqDto();
-
 
     @BeforeEach
     public void setUp(){

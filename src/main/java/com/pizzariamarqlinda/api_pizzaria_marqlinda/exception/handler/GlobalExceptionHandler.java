@@ -1,6 +1,7 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.handler;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ErrorResponseDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.FieldErrorDto;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ObjectAlreadyExists.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponseDto objectAlreadyExists(ObjectAlreadyExists ex){
+        return ErrorResponseDto.responseConflict(ex.getMessage());
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDto objectNotFoundException(ObjectNotFoundException ex){
         return ErrorResponseDto.responseConflict(ex.getMessage());
     }
 

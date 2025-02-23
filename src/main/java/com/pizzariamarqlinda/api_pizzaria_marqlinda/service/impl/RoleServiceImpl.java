@@ -1,5 +1,6 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service.impl;
 
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.RoleMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleDto;
@@ -33,11 +34,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void delete(Long id) {
         Optional<Role> role = repository.findById(id);
-        if(role.isEmpty()){
-            throw new RuntimeException("Usuário inexistente.");
-        }else {
+        if(role.isEmpty())
+            throw new ObjectAlreadyExists("Usuário inexistente.");
+        else
             repository.delete(role.get());
-        }
     }
 
 }
