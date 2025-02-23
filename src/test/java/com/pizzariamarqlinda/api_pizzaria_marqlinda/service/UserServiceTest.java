@@ -1,25 +1,21 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.impl.UserServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -34,34 +30,45 @@ public class UserServiceTest {
     @Mock
     private UserRepository repository;
 
-    UserReqDto newCustomer;
-    User savedCustomer;
+    UserReqDto newUserSuccess;
+    User savedUser;
+    UserReqDto userEmailExists;
+    UserReqDto userReqExistsEmail = new UserReqDto();
+
 
     @BeforeEach
     public void setUp(){
         service.setEncoder(new BCryptPasswordEncoder());
 
-        newCustomer = new UserReqDto();
-        newCustomer.setName("Rafael");
-        newCustomer.setLastName("Mendes");
-        newCustomer.setPassword("343456");
-        newCustomer.setPhone("6165698754");
+        newUserSuccess = new UserReqDto();
+        newUserSuccess.setName("Rafael");
+        newUserSuccess.setLastName("Mendes");
+        newUserSuccess.setPassword("12345");
 
-        savedCustomer = new User();
-        savedCustomer.setId(1L);
-        savedCustomer.setRoles(List.of("COMMON_USER"));
+        userReqExistsEmail = new UserReqDto();
+        userReqExistsEmail.setName("Rafael");
+        userReqExistsEmail.setLastName("Mendes");
+        userReqExistsEmail.setEmail("test@gmail.com");
 
-        when(repository.save(any())).thenReturn(savedCustomer);
-
-
+        savedUser = new User();
+        savedUser.setId(1L);
 
     }
 
     @Test
     public void mustRegisterUserSuccessfully(){
-
-        assertEquals(service.save(newCustomer), 1L);
-
+        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(repository.save(any())).thenReturn(savedUser);
+        assertEquals(service.save(newUserSuccess), 1L);
         verify(repository).save(any(User.class));
+    }
+
+    @Test
+    public void mustReturnErrorObjectAlreadyExists(){
+        when(repository.findByEmail(anyString())).thenReturn(Optional.of(savedUser));
+        assertThrows(ObjectAlreadyExists.class, ()->{
+            service.save(userReqExistsEmail);
+        });
+        verify(repository).findByEmail(anyString());
     }
 }
