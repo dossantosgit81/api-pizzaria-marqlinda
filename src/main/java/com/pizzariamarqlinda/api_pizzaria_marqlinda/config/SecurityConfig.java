@@ -2,6 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,6 +26,8 @@ public class SecurityConfig {
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
+                    authorize.requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN_USER");
+                    authorize.requestMatchers("/api/roles/**").hasRole("ADMIN_USER");
                     authorize.anyRequest().authenticated();
                 })
                 .build();
@@ -37,7 +40,12 @@ public class SecurityConfig {
                 .password(encoder.encode("teste"))
                 .roles("COMMON_USER")
                 .build();
-        return new InMemoryUserDetailsManager(user);
+        UserDetails user2 = User.builder()
+                .username("Jao")
+                .password(encoder.encode("teste"))
+                .roles("ADMIN_USER")
+                .build();
+        return new InMemoryUserDetailsManager(user, user2);
     }
 
     @Bean
