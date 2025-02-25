@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     private void validateLogin(String email){
         if(repository.findByEmail(email).isPresent())
-            throw new ObjectAlreadyExists("Email já existe.");
+            throw new ObjectAlreadyExists("Email incorreto.");
     }
 
     @Override
@@ -54,6 +55,11 @@ public class UserServiceImpl implements UserService {
        return repository.findAll().stream()
                 .map(mapper::entityToUserResDto)
                 .toList();
+    }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return repository.findByEmail(email);
     }
 
 
