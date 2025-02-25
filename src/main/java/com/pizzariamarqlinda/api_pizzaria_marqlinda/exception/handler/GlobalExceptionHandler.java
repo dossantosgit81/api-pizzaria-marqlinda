@@ -2,8 +2,9 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.handler;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ErrorResponseDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.FieldErrorDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectSessionExpiredExceptionException;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.dto.ErrorResponseDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.dto.FieldErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -39,6 +40,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponseDto objectNotFoundException(ObjectNotFoundException ex){
         return ErrorResponseDto.responseNotFound(HttpStatus.NOT_FOUND.value(),ex.getMessage());
+    }
+
+    @ExceptionHandler(ObjectSessionExpiredExceptionException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponseDto objectNotFoundException(ObjectSessionExpiredExceptionException ex){
+        return ErrorResponseDto.responseNotFound(HttpStatus.UNAUTHORIZED.value(),ex.getMessage());
     }
 
 }

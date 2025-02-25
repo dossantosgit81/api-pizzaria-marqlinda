@@ -1,4 +1,4 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.dto;
 
 import org.springframework.http.HttpStatus;
 
@@ -18,6 +18,9 @@ public record ErrorResponseDto(int status, String message, List<FieldErrorDto> e
     }
 
     public static ErrorResponseDto responseNotFound(int status, String message){
+        return new ErrorResponseDto(status, message, List.of());
+    }
+    public static ErrorResponseDto responseUnauthorized(int status, String message){
         return new ErrorResponseDto(status, message, List.of());
     }
 }

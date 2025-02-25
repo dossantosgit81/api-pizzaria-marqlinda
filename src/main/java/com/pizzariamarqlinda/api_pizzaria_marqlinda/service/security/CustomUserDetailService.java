@@ -15,16 +15,14 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        var user = userService.findUserByEmail(email);
-        if(user.isEmpty()){
-            throw new ObjectNotFoundException("Usuário não encontrado.");
-        }
+        var user = userService.findByEmail(email);
+
         //TODO não se esqueça de verficar se de fato esse email é do usuário logado
-        var useFound = user.get();
+
         return User.builder()
-                .username(useFound.getName())
-                .password(useFound.getPassword())
-                .roles(useFound.getRoles().toArray(new String[user.get().getRoles().size()]))
+                .username(user.getEmail())
+                .password(user.getPassword())
+                .roles(user.getRoles().toArray(new String[user.getRoles().size()]))
                 .build();
     }
 }

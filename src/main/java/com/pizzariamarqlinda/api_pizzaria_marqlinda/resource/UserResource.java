@@ -1,5 +1,6 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.resource;
 
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,5 +34,11 @@ public class UserResource {
     @PreAuthorize("hasRole('ADMIN_USER')")
     public ResponseEntity<List<UserResDto>> findAll(){
         return ResponseEntity.ok(service.all());
+    }
+
+    @GetMapping(value = "{id}",produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<UserResDto> findById(@PathVariable("id") Long id, Authentication authentication){
+        UserResDto user = service.findById(id, authentication);
+        return ResponseEntity.ok(user);
     }
 }
