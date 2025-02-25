@@ -12,4 +12,12 @@ public record ErrorResponseDto(int status, String message, List<FieldErrorDto> e
     public static ErrorResponseDto responseConflict(String message){
         return new ErrorResponseDto(HttpStatus.CONFLICT.value(), message, List.of());
     }
+
+    public static ErrorResponseDto responseAccessDenied(int status, String message){
+        return new ErrorResponseDto(status, message, List.of());
+    }
+
+    public static ErrorResponseDto responseNotFound(int status, String message){
+        return new ErrorResponseDto(status, message, List.of());
+    }
 }

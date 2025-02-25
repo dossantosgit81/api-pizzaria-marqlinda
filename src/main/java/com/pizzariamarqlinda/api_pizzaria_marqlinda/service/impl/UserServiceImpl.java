@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     private void validateLogin(String email){
         if(repository.findByEmail(email).isPresent())
-            throw new ObjectAlreadyExists("Email incorreto.");
+            throw new ObjectAlreadyExists("Já existe um usuário com esse email.");
     }
 
     @Override

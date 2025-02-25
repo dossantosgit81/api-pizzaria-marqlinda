@@ -5,6 +5,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundExce
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ErrorResponseDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.FieldErrorDto;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -24,14 +25,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ObjectAlreadyExists.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponseDto objectAlreadyExists(ObjectAlreadyExists ex){
+    public ErrorResponseDto objectAlreadyExistsException(ObjectAlreadyExists ex){
         return ErrorResponseDto.responseConflict(ex.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponseDto accessDeniedException(AccessDeniedException ex){
+        return ErrorResponseDto.responseAccessDenied(HttpStatus.FORBIDDEN.value(), "Acesso negado.");
     }
 
     @ExceptionHandler(ObjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponseDto objectNotFoundException(ObjectNotFoundException ex){
-        return ErrorResponseDto.responseConflict(ex.getMessage());
+        return ErrorResponseDto.responseNotFound(HttpStatus.NOT_FOUND.value(),ex.getMessage());
     }
 
 }

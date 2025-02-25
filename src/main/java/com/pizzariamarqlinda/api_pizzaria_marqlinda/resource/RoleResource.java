@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @RequestMapping("/api/roles")
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN_USER')")
 public class RoleResource {
 
     private final RoleService service;
