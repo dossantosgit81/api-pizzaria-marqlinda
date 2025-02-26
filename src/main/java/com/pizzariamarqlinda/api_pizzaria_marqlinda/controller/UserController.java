@@ -1,6 +1,5 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.resource;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -19,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/users")
 @RestController
 @RequiredArgsConstructor
-public class UserResource {
+public class UserController {
 
     private final UserService service;
 
@@ -37,8 +35,8 @@ public class UserResource {
     }
 
     @GetMapping(value = "{id}",produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserResDto> findById(@PathVariable("id") Long id, Authentication authentication){
-        UserResDto user = service.findById(id, authentication);
+    public ResponseEntity<UserResDto> findById(@PathVariable("id") Long id){
+        UserResDto user = service.findById(id);
         return ResponseEntity.ok(user);
     }
 }

@@ -1,6 +1,5 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service.security;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
