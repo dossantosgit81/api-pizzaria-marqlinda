@@ -1,4 +1,4 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.service.security;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.security;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
 import lombok.RequiredArgsConstructor;

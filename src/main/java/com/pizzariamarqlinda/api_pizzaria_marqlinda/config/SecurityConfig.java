@@ -1,7 +1,7 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.config;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.security.CustomUserDetailService;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.security.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

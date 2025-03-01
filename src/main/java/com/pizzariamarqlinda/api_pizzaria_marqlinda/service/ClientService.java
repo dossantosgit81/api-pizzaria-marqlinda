@@ -1,6 +1,7 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.ClientMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Client;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ClientDto;
@@ -31,10 +32,15 @@ public class ClientService {
         repository.save(client);
     }
 
-    public void validateUserExistsId(String clientId){
+    private void validateUserExistsId(String clientId){
         Optional<Client> clientFound = repository.findByClientId(clientId);
         if(clientFound.isPresent())
             throw new ObjectAlreadyExists("Client já está cadastrado.");
+    }
+
+    public Client findById(String clientId){
+        Optional<Client> client = repository.findByClientId(clientId);
+        return client.orElse(null);
     }
 
 }
