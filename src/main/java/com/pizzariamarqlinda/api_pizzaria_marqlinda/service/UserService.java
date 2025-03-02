@@ -8,6 +8,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUser;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -55,7 +56,7 @@ public class UserService {
 
     private Role getRoleCommonUser(){
         Role role = new Role();
-        role.setDescription("COMMON_USER");
+        role.setDescription(ProfilesUser.COMMON_USER);
         return role;
     }
 

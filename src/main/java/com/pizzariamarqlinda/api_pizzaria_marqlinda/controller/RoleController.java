@@ -1,6 +1,6 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +22,14 @@ public class RoleController {
     private final RoleService service;
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody RoleDto roleDto, UriComponentsBuilder uriBuilder){
-        Long idRole = service.save(roleDto);
+    public ResponseEntity<Void> create(@Valid @RequestBody RoleReqDto roleReqDto, UriComponentsBuilder uriBuilder){
+        Long idRole = service.save(roleReqDto);
         URI uri = uriBuilder.path("/api/roles/{id}").buildAndExpand(idRole).toUri();
         return ResponseEntity.created(uri).body(null);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<RoleDto>> findAll(){
+    public ResponseEntity<List<RoleReqDto>> findAll(){
         return ResponseEntity.ok(service.all());
     }
 

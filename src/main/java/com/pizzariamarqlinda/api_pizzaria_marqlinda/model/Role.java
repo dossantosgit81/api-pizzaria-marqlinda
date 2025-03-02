@@ -1,5 +1,6 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.model;
 
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUser;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,7 +19,8 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String description;
+    @Enumerated(EnumType.STRING)
+    private ProfilesUser description;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;

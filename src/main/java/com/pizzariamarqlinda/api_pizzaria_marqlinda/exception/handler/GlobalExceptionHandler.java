@@ -7,6 +7,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.dto.ErrorResponseD
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.dto.FieldErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,6 +46,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ObjectSessionExpiredExceptionException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponseDto objectNotFoundException(ObjectSessionExpiredExceptionException ex){
+        return ErrorResponseDto.responseNotFound(HttpStatus.UNAUTHORIZED.value(),ex.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponseDto badCredentialsException(BadCredentialsException ex){
         return ErrorResponseDto.responseNotFound(HttpStatus.UNAUTHORIZED.value(),ex.getMessage());
     }
 

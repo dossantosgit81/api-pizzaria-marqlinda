@@ -1,15 +1,14 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.model;
 
-import io.hypersistence.utils.hibernate.type.array.ListArrayType;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.LoginReqDto;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,14 +37,18 @@ public class User implements Serializable {
     @Column(length = 300)
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "users_roles",
+           name = "users_roles",
            joinColumns = @JoinColumn(name = "user_id"),
            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    public boolean isValidUser(LoginReqDto loginReqDto, PasswordEncoder passwordEncoder){
+        return passwordEncoder.matches(loginReqDto.password(), this.password);
+    }
+
+    @OneToOne(cascade = CascadeType.ALL)
     private Cart cart;
 }

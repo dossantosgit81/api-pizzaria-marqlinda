@@ -3,7 +3,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.RoleMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,12 +18,12 @@ public class RoleService  {
     private final RoleRepository repository;
     private final RoleMapper mapper = RoleMapper.INSTANCE;
 
-    public Long save(RoleDto role) {
+    public Long save(RoleReqDto role) {
         Role roleConverted = mapper.roleDtoToEntity(role);
         return repository.save(roleConverted).getId();
     }
 
-    public List<RoleDto> all() {
+    public List<RoleReqDto> all() {
         return repository.findAll().stream()
                 .map(mapper::entityToRoleDto).toList();
     }

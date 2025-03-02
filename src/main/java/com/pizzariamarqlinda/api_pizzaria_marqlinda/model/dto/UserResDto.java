@@ -1,6 +1,6 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto;
 
-import java.util.List;
+import java.util.Set;
 
-public record UserResDto(Long id, String name, String lastName, CartDto cart, String email, List<String> roles) {
+public record UserResDto(Long id, String name, String lastName, CartDto cart, String email, Set<RoleReqDto> roles) {
 }
