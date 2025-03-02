@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "roles")
 @EqualsAndHashCode(of = "id")
@@ -17,5 +19,8 @@ public class Role {
     private Long id;
 
     private String description;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
 }

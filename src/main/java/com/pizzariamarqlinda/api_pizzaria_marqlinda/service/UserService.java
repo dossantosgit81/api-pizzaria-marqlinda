@@ -4,6 +4,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExist
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.UserMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Cart;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -46,9 +48,15 @@ public class UserService {
         User userConverted = mapper.userReqDtoToEntity(userReq);
         String password = userReq.getPassword();
         userConverted.setPassword(encoder.encode(password));
-        userConverted.setRoles(List.of("COMMON_USER"));
+        userConverted.setRoles(Set.of(getRoleCommonUser()));
         userConverted.setCart(new Cart());
         return userConverted;
+    }
+
+    private Role getRoleCommonUser(){
+        Role role = new Role();
+        role.setDescription("COMMON_USER");
+        return role;
     }
 
     private void validateLoginSaved(String email) {

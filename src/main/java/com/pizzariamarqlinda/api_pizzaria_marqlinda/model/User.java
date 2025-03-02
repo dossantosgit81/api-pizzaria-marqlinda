@@ -10,6 +10,7 @@ import org.hibernate.annotations.Type;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -37,9 +38,13 @@ public class User implements Serializable {
     @Column(length = 300)
     private String password;
 
-    @Type(ListArrayType.class)
-    @Column(columnDefinition = "varchar[]")
-    private List<String> roles;
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "users_roles",
+           joinColumns = @JoinColumn(name = "user_id"),
+           inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     private Cart cart;
