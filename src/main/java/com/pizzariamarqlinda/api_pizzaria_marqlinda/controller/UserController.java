@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -29,13 +30,13 @@ public class UserController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMIN_USER')")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
     public ResponseEntity<List<UserResDto>> findAll(){
         return ResponseEntity.ok(service.all());
     }
 
     @GetMapping(value = "{id}",produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<UserResDto> findById(@PathVariable("id") Long id){
+    public ResponseEntity<UserResDto> findById(@PathVariable("id") Long id, JwtAuthenticationToken token){
         UserResDto user = service.findById(id);
         return ResponseEntity.ok(user);
     }

@@ -3,7 +3,6 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.LoginReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.LoginResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.LoginService;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

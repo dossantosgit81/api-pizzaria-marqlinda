@@ -86,7 +86,6 @@ public class UserService {
         var userReturn = userFoundById.get();
         validateUser(loggedUser, userReturn);
         return mapper.entityToUserResDto(userReturn);
-
     }
 
     public User loggedUser(){
@@ -103,7 +102,12 @@ public class UserService {
     }
 
     private boolean isUserContainsValidRole(User loggedUser){
-        return loggedUser.getRoles().contains("ADMIN_USER");
+        for (Role role : loggedUser.getRoles()){
+            if(role.getDescription().equals(ProfilesUser.ADMIN_USER)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

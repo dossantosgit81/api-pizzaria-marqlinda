@@ -27,7 +27,7 @@ import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Value("${jwt.private.key}")
@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers(HttpMethod.POST, "/api/users").permitAll();
+                    authorize.requestMatchers(HttpMethod.POST, "/api/login").permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .build();
