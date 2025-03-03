@@ -53,7 +53,7 @@ public class UserService {
     }
 
     private Role getRoleCommonUser(){
-        return roleService.findByName(ProfilesUserEnum.ADMIN_USER);
+        return roleService.findByNameCommonUser(ProfilesUserEnum.COMMON_USER);
     }
 
     private void validateLoginSaved(String email) {

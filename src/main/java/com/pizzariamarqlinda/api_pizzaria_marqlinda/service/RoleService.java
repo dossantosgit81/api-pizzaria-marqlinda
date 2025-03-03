@@ -24,8 +24,14 @@ public class RoleService  {
         return repository.save(roleConverted).getId();
     }
 
-    public Role findByName(ProfilesUserEnum name){
-        return repository.findByName(name.getName());
+    public Role findByNameCommonUser(ProfilesUserEnum name){
+        var role = repository.findByName(name);
+        if(role.isEmpty()){
+            var newRole = new Role();
+            newRole.setName(ProfilesUserEnum.COMMON_USER);
+            return newRole;
+        }
+        return role.get();
     }
 
     public List<RoleReqDto> all() {
