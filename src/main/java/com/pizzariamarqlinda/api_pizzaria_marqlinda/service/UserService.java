@@ -13,7 +13,6 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class UserService {
     private static final String NON_EXISTENT_USER = "Usuário inexistente.";
     private static final String EXISTS_EMAIL = "Já existe um usuário com esse email.";
 
-    private final ValidatorUserLogged validatorUserLogged;
+    private final ValidatorLoggedUser validatorLoggedUser;
     private final UserMapper mapper = UserMapper.INSTANCE;
     private final UserRepository repository;
     @Setter
@@ -80,12 +79,12 @@ public class UserService {
     }
 
     public UserResDto findById(Long id, JwtAuthenticationToken token) {
-        Optional<User> userFoundById = repository.findById(id);
-        if(userFoundById.isEmpty())
+        Optional<User> userReqSearched = repository.findById(id);
+        if(userReqSearched.isEmpty())
             throw new ObjectNotFoundException(NON_EXISTENT_USER);
-        var userReturn = userFoundById.get();
-        validatorUserLogged.validateUser(loggedUser, userReturn);
-        return mapper.entityToUserResDto(userReturn);
+        var loggedUser = validatorLoggedUser.loggedUser(token);
+        validatorLoggedUser.validateUser(loggedUser, userReqSearched.get());
+        return mapper.entityToUserResDto(userReqSearched.get());
     }
 
 
