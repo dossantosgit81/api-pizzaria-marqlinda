@@ -21,7 +21,7 @@ public class ValidatorLoggedUser {
     private final UserRepository repository;
 
     protected User loggedUser(JwtAuthenticationToken token){
-        Optional<User> userSearched = repository.findByEmail(token.getName());
+        Optional<User> userSearched = repository.findById(Long.valueOf(token.getName()));
         if(userSearched.isEmpty())
             throw new ObjectSessionExpiredExceptionException("Token inválido.");
         return userSearched.get();
