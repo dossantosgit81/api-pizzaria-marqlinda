@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ObjectSessionExpiredExceptionException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponseDto objectNotFoundException(ObjectSessionExpiredExceptionException ex){
+    public ErrorResponseDto objectSessionExpiredExceptionException(ObjectSessionExpiredExceptionException ex){
         return ErrorResponseDto.responseNotFound(HttpStatus.UNAUTHORIZED.value(),ex.getMessage());
     }
 

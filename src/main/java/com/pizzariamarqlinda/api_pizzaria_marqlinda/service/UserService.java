@@ -8,16 +8,14 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUser;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,10 +26,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserService {
 
-    public static final String NON_EXISTENT_USER = "Usuário inexistente.";
-    public static final String ACCESS_DENIED = "Acesso negado.";
-    public static final String EXISTS_EMAIL = "Já existe um usuário com esse email.";
+    private static final String NON_EXISTENT_USER = "Usuário inexistente.";
+    private static final String EXISTS_EMAIL = "Já existe um usuário com esse email.";
 
+    private final ValidatorUserLogged validatorUserLogged;
     private final UserMapper mapper = UserMapper.INSTANCE;
     private final UserRepository repository;
     @Setter
@@ -56,7 +54,7 @@ public class UserService {
 
     private Role getRoleCommonUser(){
         Role role = new Role();
-        role.setDescription(ProfilesUser.COMMON_USER);
+        role.setDescription(ProfilesUserEnum.COMMON_USER);
         return role;
     }
 
@@ -81,36 +79,15 @@ public class UserService {
         return user.get();
     }
 
-    public UserResDto findById(Long id) {
+    public UserResDto findById(Long id, JwtAuthenticationToken token) {
         Optional<User> userFoundById = repository.findById(id);
         if(userFoundById.isEmpty())
             throw new ObjectNotFoundException(NON_EXISTENT_USER);
-        User loggedUser = loggedUser();
         var userReturn = userFoundById.get();
-        validateUser(loggedUser, userReturn);
+        validatorUserLogged.validateUser(loggedUser, userReturn);
         return mapper.entityToUserResDto(userReturn);
     }
 
-    public User loggedUser(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails loggedUser = (UserDetails) auth.getPrincipal();
-        return findByEmail(loggedUser.getUsername());
-    }
 
-    private void validateUser(User loggedUser, User userReq){
-        if(!isUserContainsValidRole(loggedUser)){
-            if(!loggedUser.getId().equals(userReq.getId()))
-                throw new AccessDeniedException(ACCESS_DENIED);
-        }
-    }
-
-    private boolean isUserContainsValidRole(User loggedUser){
-        for (Role role : loggedUser.getRoles()){
-            if(role.getDescription().equals(ProfilesUser.ADMIN_USER)){
-                return true;
-            }
-        }
-        return false;
-    }
 
 }

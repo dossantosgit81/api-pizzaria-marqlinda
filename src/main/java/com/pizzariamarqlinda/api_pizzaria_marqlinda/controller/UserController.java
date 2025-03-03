@@ -37,7 +37,7 @@ public class UserController {
 
     @GetMapping(value = "{id}",produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserResDto> findById(@PathVariable("id") Long id, JwtAuthenticationToken token){
-        UserResDto user = service.findById(id);
+        UserResDto user = service.findById(id, token);
         return ResponseEntity.ok(user);
     }
 }
