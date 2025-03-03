@@ -66,7 +66,10 @@ public class UserService {
     }
 
     public List<UserResDto> all() {
-        return repository.findAll().stream()
+        List<User> users = repository.findAll();
+        if(users.isEmpty())
+            return List.of();
+        return users.stream()
                 .map(mapper::entityToUserResDto)
                 .toList();
     }
