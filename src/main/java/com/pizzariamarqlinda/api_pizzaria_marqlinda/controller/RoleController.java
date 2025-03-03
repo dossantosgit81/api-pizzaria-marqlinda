@@ -1,6 +1,7 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RolesResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class RoleController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<RoleReqDto>> findAll(){
+    public ResponseEntity<List<RolesResDto>> findAll(){
         return ResponseEntity.ok(service.all());
     }
 

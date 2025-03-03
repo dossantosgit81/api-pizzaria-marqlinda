@@ -14,5 +14,5 @@ import lombok.Setter;
 public class RoleReqDto {
 
     @NotNull(message = "Campo deve estar preenchido.")
-    private ProfilesUserEnum description;
+    private ProfilesUserEnum name;
 }

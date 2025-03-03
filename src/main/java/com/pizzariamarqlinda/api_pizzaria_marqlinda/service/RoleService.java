@@ -4,6 +4,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExist
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.RoleMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RolesResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,9 @@ public class RoleService  {
 
     public Long save(RoleReqDto role) {
         Role roleConverted = mapper.roleDtoToEntity(role);
+        var roleSearched = repository.findByName(role.getName());
+        if(roleSearched.isPresent())
+            throw new ObjectAlreadyExists("Essa permissão já existe na base de dados.");
         return repository.save(roleConverted).getId();
     }
 
@@ -34,9 +39,10 @@ public class RoleService  {
         return role.get();
     }
 
-    public List<RoleReqDto> all() {
+    public List<RolesResDto> all() {
         return repository.findAll().stream()
-                .map(mapper::entityToRoleDto).toList();
+                .map(mapper::entityToRoleResDto)
+                .collect(Collectors.toList());
     }
 
     public void delete(Long id) {
