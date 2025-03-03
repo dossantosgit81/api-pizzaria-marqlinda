@@ -27,7 +27,6 @@ public class ValidatorLoggedUser {
         return userSearched.get();
     }
 
-
     protected void validateUser(User loggedUser, User userReq){
         if(!isUserContainsValidRole(loggedUser)){
             if(!loggedUser.getId().equals(userReq.getId()))
@@ -35,9 +34,9 @@ public class ValidatorLoggedUser {
         }
     }
 
-    protected boolean isUserContainsValidRole(User loggedUser){
+    private boolean isUserContainsValidRole(User loggedUser){
         for (Role role : loggedUser.getRoles()){
-            if(role.getDescription().equals(ProfilesUserEnum.ADMIN_USER)){
+            if(role.getName().equals(ProfilesUserEnum.ADMIN_USER)){
                 return true;
             }
         }

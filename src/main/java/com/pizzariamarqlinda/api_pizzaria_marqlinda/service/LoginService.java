@@ -45,7 +45,7 @@ public class LoginService {
     private LoginResDto loginRes(User user){
         Set<String> scopes = new HashSet<>();
         for (Role role : user.getRoles())
-            scopes.add(role.getDescription().getName());
+            scopes.add(role.getName().getName());
         var expiresIn = 300L;
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("mybackend")

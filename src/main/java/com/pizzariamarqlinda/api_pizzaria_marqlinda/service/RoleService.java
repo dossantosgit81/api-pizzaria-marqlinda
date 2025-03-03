@@ -4,6 +4,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExist
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.RoleMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,10 @@ public class RoleService  {
     public Long save(RoleReqDto role) {
         Role roleConverted = mapper.roleDtoToEntity(role);
         return repository.save(roleConverted).getId();
+    }
+
+    public Role findByName(ProfilesUserEnum name){
+        return repository.findByName(name.getName());
     }
 
     public List<RoleReqDto> all() {

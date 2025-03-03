@@ -31,6 +31,7 @@ public class UserService {
     private final ValidatorLoggedUser validatorLoggedUser;
     private final UserMapper mapper = UserMapper.INSTANCE;
     private final UserRepository repository;
+    private final RoleService roleService;
     @Setter
     @Autowired
     private PasswordEncoder encoder;
@@ -52,9 +53,7 @@ public class UserService {
     }
 
     private Role getRoleCommonUser(){
-        Role role = new Role();
-        role.setDescription(ProfilesUserEnum.COMMON_USER);
-        return role;
+        return roleService.findByName(ProfilesUserEnum.ADMIN_USER);
     }
 
     private void validateLoginSaved(String email) {
