@@ -22,18 +22,17 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-
-    @Value("${jwt.private.key}")
-    private RSAPrivateKey privateKey;
-    @Value("${jwt.public.key}")
-    private RSAPublicKey publicKey;
 
     @Bean
     public SecurityFilterChain securityConfiguration(HttpSecurity httpSecurity) throws Exception {
@@ -47,18 +46,6 @@ public class SecurityConfig {
                     authorize.anyRequest().authenticated();
                 })
                 .build();
-    }
-
-    @Bean
-    public JwtDecoder jwtDecoder(){
-        return NimbusJwtDecoder.withPublicKey(publicKey).build();
-    }
-
-    @Bean
-    public JwtEncoder jwtEncoder(){
-        JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(privateKey).build();
-        var jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
     }
 
     @Bean
