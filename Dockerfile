@@ -1,12 +1,12 @@
 FROM maven:3.9.9-amazoncorretto-21-al2023 as build
 WORKDIR /build
 COPY . . 
-RUN mvn clean package -DskiptTests
+RUN mvn clean package -DskipTests
 
 FROM amazoncorretto:21.0.6
 WORKDIR /app
 
-COPY --from=build ./build/target/*.jar ./app/api.jar
+COPY --from=build ./build/target/*.jar ./api.jar
 
 EXPOSE 8080
 
