@@ -2,9 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.model;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.LoginReqDto;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.Serial;
@@ -16,6 +14,9 @@ import java.util.Set;
 @Setter
 @EqualsAndHashCode(of = "id")
 @Table(name = "users")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

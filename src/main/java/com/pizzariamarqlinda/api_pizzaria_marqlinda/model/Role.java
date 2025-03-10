@@ -2,9 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.model;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -13,6 +11,9 @@ import java.util.Set;
 @EqualsAndHashCode(of = "id")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Role {
 
     @Id

@@ -27,7 +27,9 @@ public class LoginService {
     @Setter
     @Autowired
     private PasswordEncoder encoder;
-    private final JwtEncoder jwtEncoder;
+    @Setter
+    @Autowired
+    private JwtEncoder jwtEncoder;
 
     public LoginResDto login(LoginReqDto req){
         String INVALID_USER = "Usuário e/ou senha inválido(s).";
