@@ -1,17 +1,23 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -28,6 +34,18 @@ public class UserServiceTest {
     @Mock
     private UserRepository repository;
 
+    @Captor
+    private ArgumentCaptor<User> userArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<ProfilesUserEnum> profileUserEnumArgumentCaptor;
+
+    @Mock
+    private RoleService roleService;
+
     UserReqDto newUserSuccess;
     User savedUser;
     UserReqDto userReqExistsEmail = new UserReqDto();
@@ -35,7 +53,6 @@ public class UserServiceTest {
     @BeforeEach
     public void setUp(){
         service.setEncoder(new BCryptPasswordEncoder());
-
         newUserSuccess = new UserReqDto();
         newUserSuccess.setName("Rafael");
         newUserSuccess.setLastName("Mendes");
@@ -52,15 +69,19 @@ public class UserServiceTest {
     }
 
     @Test
-    public void mustRegisterUserSuccessfully(){
-        when(repository.findByEmail(anyString())).thenReturn(Optional.empty());
-        when(repository.save(any())).thenReturn(savedUser);
+    public void shouldRegisterUserSuccessfully(){
+        var role = Role.builder().id(1L).name(ProfilesUserEnum.COMMON_USER).build();
+        doReturn(Optional.empty()).when(repository).findByEmail(stringArgumentCaptor.capture());
+        doReturn(role).when(roleService).findByNameCommonUser(profileUserEnumArgumentCaptor.capture());
+        doReturn(savedUser).when(repository).save(userArgumentCaptor.capture());
         assertEquals(service.save(newUserSuccess), 1L);
-        verify(repository).save(any(User.class));
+
+        var userCaptured = userArgumentCaptor.getValue();
+        assertEquals(newUserSuccess.getEmail(), userCaptured.getEmail());
     }
 
     @Test
-    public void mustReturnErrorObjectAlreadyExists(){
+    public void shouldReturnErrorObjectAlreadyExists(){
         when(repository.findByEmail(anyString())).thenReturn(Optional.of(savedUser));
         assertThrows(ObjectAlreadyExists.class, ()->{
             service.save(userReqExistsEmail);

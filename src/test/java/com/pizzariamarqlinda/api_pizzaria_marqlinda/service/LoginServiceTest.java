@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Set;
 
@@ -83,7 +84,6 @@ class LoginServiceTest {
     void shouldThrowExceptionWhenUserNotFound() {
         LoginReqDto loginReq = new LoginReqDto("unknown@example.com", "password");
         when(userService.findByEmail(loginReq.email())).thenThrow(new ObjectNotFoundException("User not found"));
-
         assertThrows(BadCredentialsException.class, () -> loginService.login(loginReq));
     }
 }

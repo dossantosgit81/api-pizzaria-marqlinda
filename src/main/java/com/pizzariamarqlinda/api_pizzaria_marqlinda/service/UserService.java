@@ -31,9 +31,8 @@ public class UserService {
 
     private final ValidatorLoggedUser validatorLoggedUser;
     private final UserMapper mapper = UserMapper.INSTANCE;
-    @Setter
-    @Autowired
-    private UserRepository repository;
+
+    private final UserRepository repository;
     private final RoleService roleService;
     @Setter
     @Autowired
