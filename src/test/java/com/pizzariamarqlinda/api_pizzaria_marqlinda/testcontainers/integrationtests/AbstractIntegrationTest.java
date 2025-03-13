@@ -6,37 +6,31 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.lifecycle.Startables;
 
 import java.util.Map;
 import java.util.stream.Stream;
 
-@ContextConfiguration(initializers = AbstractIntegrationTest.Initializer.class)
+@Testcontainers
 public class AbstractIntegrationTest {
 
-    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        static PostgreSQLContainer<?> postgresql = new PostgreSQLContainer<>("postgres:16.8");
+    @Container
+    private static final PostgreSQLContainer<?> postgreSQLContainer =
+            new PostgreSQLContainer<>("postgres:16.8")
+                    .withDatabaseName("testdb")
+                    .withUsername("test")
+                    .withPassword("test");
 
-        @Override
-        public void initialize(@NotNull ConfigurableApplicationContext applicationContext) {
-            startContainers();
-            ConfigurableEnvironment env = applicationContext.getEnvironment();
-            MapPropertySource testContainers = new MapPropertySource("testcontainers", (Map) createConnectionConfiguration());
-            env.getPropertySources().addFirst(testContainers);
-        }
-
-        private static Map<String, String> createConnectionConfiguration() {
-            return Map.of(
-                "spring.datasource.url", postgresql.getJdbcUrl(),
-                "spring.datasource.username", postgresql.getUsername(),
-                "spring.datasource.password", postgresql.getPassword()
-            );
-        }
-
-        private static void startContainers() {
-            Startables.deepStart(Stream.of(postgresql)).join();
-
-        }
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+        registry.add("spring.jpa.properties.hibernate.dialect", () -> "org.hibernate.dialect.PostgreSQLDialect");
     }
 }
