@@ -32,6 +32,7 @@ public class UserController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
     public ResponseEntity<List<UserResDto>> findAll(){
+
         return ResponseEntity.ok(service.all());
     }
 

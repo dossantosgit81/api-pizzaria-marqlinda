@@ -3,10 +3,12 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationt
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.TestConfigs;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.AbstractIntegrationTest;
 import io.restassured.http.ContentType;
+import io.restassured.parsing.Parser;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.*;
@@ -14,37 +16,79 @@ import static io.restassured.RestAssured.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class UserIntegrationTest extends AbstractIntegrationTest {
 
-    private static final String name = "Cal";
-    private static final String lastName = "John";
-    private static final String email = "cj@test.com";
-    private static final String password = "12345";
-    private static final String phone = "4002-89922";
-
-    private Map<String, Object> req;
-    private static String tokenCommonUser = "";
-
-    @Test
-    public void shouldLogInSuccessfully() throws Exception {
-        basePath = "/api/users";
+    @BeforeEach
+    public void setUp(){
         port = TestConfigs.SERVER_PORT;
-
-        req = new HashMap<>();
-        req.put("name", name);
-        req.put("lastName", lastName);
-        req.put("email", email);
-        req.put("password", password);
-        req.put("phone", phone);
-
-        given()
-                .contentType(ContentType.JSON)
-                .body(req)
-                .when()
-                .post();
-
-        System.out.println(tokenCommonUser);
-
+        defaultParser = Parser.JSON;
     }
 
 
+    @Test
+    public void mustSuccessfullyRegisterAUser() throws Exception {
+        given()
+            .contentType(ContentType.JSON)
+            .body(Mock.reqValidPost())
+        .when()
+            .post("/api/users")
+        .then()
+            .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    public void shouldReturn409WhenRegisteringAUserWithADuplicateEmail() throws Exception {
+        given()
+                .contentType(ContentType.JSON)
+                .body(Mock.reqInvalidPost())
+        .when()
+                .post("/api/users");
+        given()
+                .contentType(ContentType.JSON)
+                .body(Mock.reqInvalidPost())
+        .when()
+                .post("/api/users")
+        .then()
+                .statusCode(HttpStatus.CONFLICT.value());
+    }
+
+    @Test
+    public void shouldReturn422WhenInvalidFields() throws Exception {
+        given()
+                .contentType(ContentType.JSON)
+                .body(Mock.reqInvalidFields())
+        .when()
+                .post("/api/users")
+        .then()
+                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+    }
+
+    @Test
+    public void shouldReturn403WhenAccessedByACommonUser() throws Exception {
+        var user = Mock.reqValidPost2();
+        //Post a user
+        given()
+                .contentType(ContentType.JSON)
+                .body(user)
+        .when()
+                .post("/api/users");
+
+        //Get token
+        String token =
+            given()
+                .contentType(ContentType.JSON)
+                .body(Map.of("email", user.get("email"), "password", user.get("password")))
+            .when()
+                .post("/api/login")
+            .then()
+                .extract()
+                .path("token");
+
+        //Assert
+        given()
+                .header("Authorization", "Bearer "+token)
+                .when()
+                    .get("/api/users")
+                .then()
+                    .statusCode(HttpStatus.FORBIDDEN.value());
+    }
 
 }
