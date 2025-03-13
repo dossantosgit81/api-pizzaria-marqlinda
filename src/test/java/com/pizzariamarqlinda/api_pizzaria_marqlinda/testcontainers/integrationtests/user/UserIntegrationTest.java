@@ -1,15 +1,18 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.user;
 
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.TestConfigs;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.AbstractIntegrationTest;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.*;
 
-public class UserControllerTest {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+public class UserIntegrationTest extends AbstractIntegrationTest {
 
     private static final String name = "Cal";
     private static final String lastName = "John";
@@ -17,13 +20,13 @@ public class UserControllerTest {
     private static final String password = "12345";
     private static final String phone = "4002-89922";
 
-    private static Map<String, Object> req;
+    private Map<String, Object> req;
     private static String tokenCommonUser = "";
 
-    @BeforeAll
-    public static void setUp(){
-        baseURI = "http://localhost";
-        port = 8080;
+    @Test
+    public void shouldLogInSuccessfully() throws Exception {
+        basePath = "/api/users";
+        port = TestConfigs.SERVER_PORT;
 
         req = new HashMap<>();
         req.put("name", name);
@@ -32,35 +35,11 @@ public class UserControllerTest {
         req.put("password", password);
         req.put("phone", phone);
 
-        //post a user
-        postAUser();
-
-        //Get token
-        tokenValidCommonUser();
-    }
-
-    private static void tokenValidCommonUser() {
-        tokenCommonUser = given()
-                .contentType(ContentType.JSON)
-                .body(req)
-                .when()
-                .post("/api/login")
-                .then()
-                .extract()
-                .path("token");
-
-    }
-
-    private static void postAUser() {
         given()
                 .contentType(ContentType.JSON)
                 .body(req)
                 .when()
-                .post("/api/users");
-    }
-
-    @Test
-    public void shouldLogInSuccessfully() throws Exception {
+                .post();
 
         System.out.println(tokenCommonUser);
 

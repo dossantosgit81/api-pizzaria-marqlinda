@@ -2,7 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.unittests.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

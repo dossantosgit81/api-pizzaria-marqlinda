@@ -1,4 +1,4 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.unittests.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Set;
 

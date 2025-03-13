@@ -1,4 +1,4 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.unittests.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
@@ -14,11 +14,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
