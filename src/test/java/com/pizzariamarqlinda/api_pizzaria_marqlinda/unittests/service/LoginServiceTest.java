@@ -6,6 +6,8 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.LoginReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.LoginResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.LoginService;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,4 +1,4 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.unittests.service;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectSessionExpiredExceptionException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
@@ -20,14 +20,14 @@ public class ValidatorLoggedUser {
 
     private final UserRepository repository;
 
-    protected User loggedUser(JwtAuthenticationToken token){
+    public User loggedUser(JwtAuthenticationToken token){
         Optional<User> userSearched = repository.findById(Long.valueOf(token.getName()));
         if(userSearched.isEmpty())
             throw new ObjectSessionExpiredExceptionException("Token inválido.");
         return userSearched.get();
     }
 
-    protected void validateUser(User loggedUser, User userReq){
+    public void validateUser(User loggedUser, User userReq){
         if(!isUserContainsValidRole(loggedUser)){
             if(!loggedUser.getId().equals(userReq.getId()))
                 throw new AccessDeniedException(ACCESS_DENIED);

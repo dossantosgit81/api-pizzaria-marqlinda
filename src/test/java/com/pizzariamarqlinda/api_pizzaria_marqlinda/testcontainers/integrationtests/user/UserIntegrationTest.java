@@ -27,7 +27,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     public void mustSuccessfullyRegisterAUser() throws Exception {
         given()
             .contentType(ContentType.JSON)
-            .body(Mock.reqValidPost())
+            .body(MockUser.reqValidPost())
         .when()
             .post("/api/users")
         .then()
@@ -38,12 +38,12 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     public void shouldReturn409WhenRegisteringAUserWithADuplicateEmail() throws Exception {
         given()
                 .contentType(ContentType.JSON)
-                .body(Mock.reqInvalidPost())
+                .body(MockUser.reqInvalidPost())
         .when()
                 .post("/api/users");
         given()
                 .contentType(ContentType.JSON)
-                .body(Mock.reqInvalidPost())
+                .body(MockUser.reqInvalidPost())
         .when()
                 .post("/api/users")
         .then()
@@ -54,7 +54,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     public void shouldReturn422WhenInvalidFields() throws Exception {
         given()
                 .contentType(ContentType.JSON)
-                .body(Mock.reqInvalidFields())
+                .body(MockUser.reqInvalidFields())
         .when()
                 .post("/api/users")
         .then()
@@ -63,7 +63,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void shouldReturn403WhenAccessedByACommonUser() throws Exception {
-        var user = Mock.reqValidPost2();
+        var user = MockUser.reqValidPost2();
         //Post a user
         given()
                 .contentType(ContentType.JSON)
@@ -89,6 +89,29 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
                     .get("/api/users")
                 .then()
                     .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    @Test
+    public void shouldReturn200WhenUserHasHoleAdmin() throws Exception {
+        var user = MockUser.reqUserAdminLogin();
+        //Get token
+        String token =
+                given()
+                    .contentType(ContentType.JSON)
+                    .body(Map.of("email", user.get("email"), "password", user.get("password")))
+                    .when()
+                        .post("/api/login")
+                    .then()
+                        .extract()
+                        .path("token");
+
+        //Assert
+        given()
+                .header("Authorization", "Bearer "+token)
+                .when()
+                .get("/api/users")
+                .then()
+                .statusCode(HttpStatus.OK.value());
     }
 
 }

@@ -1,11 +1,9 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.user;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.AbstractIntegrationTest;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class Mock {
+public class MockUser {
 
     public static Map<String, Object> reqValidPost(){
         Map<String, Object> req = new HashMap<>();
@@ -44,6 +42,13 @@ public class Mock {
         req.put("email", "luistest.com");
         req.put("password", "12345");
         req.put("phone", "40028922");
+        return req;
+    }
+
+    public static Map<String, Object> reqUserAdminLogin(){
+        Map<String, Object> req = new HashMap<>();
+        req.put("email", "rafael@gmail.com");
+        req.put("password", "adminuser");
         return req;
     }
 

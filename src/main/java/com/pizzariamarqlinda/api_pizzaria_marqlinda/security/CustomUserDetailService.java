@@ -1,6 +1,6 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.security;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.unittests.service.UserService;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
