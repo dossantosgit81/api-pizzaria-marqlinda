@@ -50,9 +50,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponseDto badCredentialsException(BadCredentialsException ex){
-        return ErrorResponseDto.responseNotFound(HttpStatus.UNAUTHORIZED.value(),ex.getMessage());
+        return ErrorResponseDto.responseNotFound(HttpStatus.FORBIDDEN.value(),ex.getMessage());
     }
 
 }

@@ -2,9 +2,9 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationt
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.TestConfigs;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.AbstractIntegrationTest;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.util.MockUser;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

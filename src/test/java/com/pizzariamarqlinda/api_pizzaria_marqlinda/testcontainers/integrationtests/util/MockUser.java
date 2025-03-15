@@ -1,4 +1,4 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.user;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.util;
 
 import java.util.HashMap;
 import java.util.Map;
