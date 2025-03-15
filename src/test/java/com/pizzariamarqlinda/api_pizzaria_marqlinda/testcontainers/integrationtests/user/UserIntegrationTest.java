@@ -4,6 +4,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.TestConfigs;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.AbstractIntegrationTest;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -92,7 +93,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldReturn200WhenUserHasHoleAdmin() throws Exception {
+    public void shouldReturn200WhenUserHasHoleAdminWhenAccessingUsers() throws Exception {
         var user = MockUser.reqUserAdminLogin();
         //Get token
         String token =
@@ -110,6 +111,106 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
                 .header("Authorization", "Bearer "+token)
                 .when()
                 .get("/api/users")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    public void shouldReturn200WhenUserOwnsTheResource() throws Exception {
+        var user = MockUser.reqValidPost3();
+        given()
+                .contentType(ContentType.JSON)
+                .body(MockUser.reqValidPost3())
+        .when()
+                .post("/api/users")
+        .then();
+
+        String token =
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(Map.of("email", user.get("email"), "password", user.get("password")))
+                .when()
+                        .post("/api/login")
+                .then()
+                        .extract()
+                        .path("token");
+
+
+        given()
+                .header("Authorization", "Bearer "+token)
+                .when()
+                .get("/api/users/1")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    public void shouldReturn403WhenUserNoOwnsTheResource() throws Exception {
+        var user = MockUser.reqValidPost3();
+        given()
+                .contentType(ContentType.JSON)
+                .body(MockUser.reqValidPost3())
+                .when()
+                .post("/api/users");
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(MockUser.reqValidPost4())
+        .when()
+                .post("/api/users");
+
+
+        String token =
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(Map.of("email", user.get("email"), "password", user.get("password")))
+                .when()
+                        .post("/api/login")
+                .then()
+                        .extract()
+                        .path("token");
+
+
+        given()
+                .header("Authorization", "Bearer "+token)
+                .when()
+                .get("/api/users/2")
+                .then()
+                .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    @Test
+    public void shouldReturn200WhenUserHasHoleAdminWhenAccessingAUser() throws Exception {
+        //O Cadastro está acontecendo no import.sql por ele ser um usuário ADMIN
+        var user = MockUser.reqUserAdminLogin();
+        given()
+                .contentType(ContentType.JSON)
+                .body(MockUser.reqValidPost3())
+                .when()
+                .post("/api/users");
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(MockUser.reqValidPost5())
+                .when()
+                .post("/api/users");
+
+        //Get token admin
+        String token =
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(Map.of("email", user.get("email"), "password", user.get("password")))
+                        .when()
+                        .post("/api/login")
+                        .then()
+                        .extract()
+                        .path("token");
+
+        //Assert
+        given()
+                .header("Authorization", "Bearer "+token)
+                .when()
+                .get("/api/users/1")
                 .then()
                 .statusCode(HttpStatus.OK.value());
     }

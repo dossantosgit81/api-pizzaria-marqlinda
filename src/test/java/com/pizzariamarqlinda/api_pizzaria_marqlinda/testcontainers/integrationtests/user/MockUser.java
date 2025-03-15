@@ -25,6 +25,36 @@ public class MockUser {
         return req;
     }
 
+    public static Map<String, Object> reqValidPost3(){
+        Map<String, Object> req = new HashMap<>();
+        req.put("name", "Brad");
+        req.put("lastName", "Silva");
+        req.put("email", "silva@test.com");
+        req.put("password", "12345678");
+        req.put("phone", "77940028922");
+        return req;
+    }
+
+    public static Map<String, Object> reqValidPost4(){
+        Map<String, Object> req = new HashMap<>();
+        req.put("name", "Louis");
+        req.put("lastName", "Armstrong");
+        req.put("email", "louis@test.com");
+        req.put("password", "12345678");
+        req.put("phone", "77940028922");
+        return req;
+    }
+
+    public static Map<String, Object> reqValidPost5(){
+        Map<String, Object> req = new HashMap<>();
+        req.put("name", "Julio");
+        req.put("lastName", "Lima");
+        req.put("email", "julio@test.com");
+        req.put("password", "12345678");
+        req.put("phone", "77940028922");
+        return req;
+    }
+
     public static Map<String, Object> reqInvalidPost(){
         Map<String, Object> req = new HashMap<>();
         req.put("name", "Luis");
