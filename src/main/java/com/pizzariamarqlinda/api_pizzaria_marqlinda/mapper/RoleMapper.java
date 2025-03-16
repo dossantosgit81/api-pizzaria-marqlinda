@@ -6,7 +6,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RolesResDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface RoleMapper {
 
     RoleMapper INSTANCE = Mappers.getMapper(RoleMapper.class);

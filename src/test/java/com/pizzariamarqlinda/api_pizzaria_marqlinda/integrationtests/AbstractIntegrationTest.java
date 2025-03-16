@@ -1,4 +1,4 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.integrationtests;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.TestInstance;

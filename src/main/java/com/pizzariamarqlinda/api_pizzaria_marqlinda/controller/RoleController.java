@@ -22,21 +22,9 @@ public class RoleController {
 
     private final RoleService service;
 
-    @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody RoleReqDto roleReqDto, UriComponentsBuilder uriBuilder){
-        Long idRole = service.save(roleReqDto);
-        URI uri = uriBuilder.path("/api/roles/{id}").buildAndExpand(idRole).toUri();
-        return ResponseEntity.created(uri).body(null);
-    }
-
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<RolesResDto>> findAll(){
         return ResponseEntity.ok(service.all());
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> findAll(@PathVariable("id") Long id){
-        service.delete(id);
-        return ResponseEntity.ok().build();
-    }
 }

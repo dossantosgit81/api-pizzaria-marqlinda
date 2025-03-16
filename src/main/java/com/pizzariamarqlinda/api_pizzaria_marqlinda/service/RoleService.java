@@ -1,9 +1,7 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.RoleMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RolesResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.RoleRepository;
@@ -11,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,21 +16,13 @@ import java.util.stream.Collectors;
 public class RoleService  {
 
     private final RoleRepository repository;
-    private final RoleMapper mapper = RoleMapper.INSTANCE;
+    private final RoleMapper mapper;
 
-    public Long save(RoleReqDto role) {
-        Role roleConverted = mapper.roleDtoToEntity(role);
-        var roleSearched = repository.findByName(role.getName());
-        if(roleSearched.isPresent())
-            throw new ObjectAlreadyExists("Essa permissão já existe na base de dados.");
-        return repository.save(roleConverted).getId();
-    }
-
-    public Role findByNameCommonUser(ProfilesUserEnum name){
-        var role = repository.findByName(name);
+    public Role findByNameCommonUser(ProfilesUserEnum profile){
+        var role = repository.findByName(profile);
         if(role.isEmpty()){
             var newRole = new Role();
-            newRole.setName(ProfilesUserEnum.COMMON_USER);
+            newRole.setName(profile);
             return newRole;
         }
         return role.get();
@@ -45,12 +34,5 @@ public class RoleService  {
                 .collect(Collectors.toList());
     }
 
-    public void delete(Long id) {
-        Optional<Role> role = repository.findById(id);
-        if(role.isEmpty())
-            throw new ObjectAlreadyExists("Usuário inexistente.");
-        else
-            repository.delete(role.get());
-    }
 
 }

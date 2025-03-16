@@ -1,22 +1,19 @@
-package com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.login;
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.integrationtests.login;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.TestConfigs;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.AbstractIntegrationTest;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.testcontainers.integrationtests.util.MockUser;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.integrationtests.AbstractIntegrationTest;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.util.MockUser;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Map;
 import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-//@DirtiesContext
 public class LoginIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach
