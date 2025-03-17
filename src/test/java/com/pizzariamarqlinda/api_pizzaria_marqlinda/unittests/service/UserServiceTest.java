@@ -10,6 +10,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.RoleService;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.ValidatorLoggedUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,11 +19,14 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -51,8 +55,12 @@ public class UserServiceTest {
     @Mock
     private RoleService roleService;
 
+    @Mock
+    private ValidatorLoggedUser validatorLoggedUser;
+
     UserReqDto newUserSuccess;
     User savedUser;
+    User adminUser;
     UserReqDto userReqExistsEmail = new UserReqDto();
 
     @BeforeEach
@@ -71,6 +79,14 @@ public class UserServiceTest {
         savedUser = new User();
         savedUser.setId(1L);
         savedUser.setEmail("saveduser@gmail.com");
+        Role roleCommonUser = Role.builder().id(1L).name(ProfilesUserEnum.COMMON_USER).build();
+        savedUser.setRoles(Set.of(roleCommonUser));
+
+        adminUser = new User();
+        adminUser.setId(1L);
+        adminUser.setEmail("useradmin@gmail.com");
+        Role roleAdmin = Role.builder().id(2L).name(ProfilesUserEnum.ADMIN_USER).build();
+        adminUser.setRoles(Set.of(roleAdmin, roleCommonUser));
 
     }
 
@@ -128,4 +144,61 @@ public class UserServiceTest {
             service.findByEmail("notexistuser@gmail.com");
         });
     }
+
+    @Test
+    public void mustReturnObjectNotFoundExceptionForLoggedAdminUser(){
+        JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
+        doReturn(Optional.empty()).when(repository).findById(longArgumentCaptor.capture());
+        doReturn(adminUser).when(validatorLoggedUser).loggedUser(token);
+        doReturn(true).when(validatorLoggedUser).isUserContainsValidRole(userArgumentCaptor.capture());
+        assertThrows(ObjectNotFoundException.class, ()->{
+            service.findById(1L, token);
+        });
+    }
+
+    @Test
+    public void mustReturnUserIfUserLoggedHasAdminUser(){
+        JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
+        doReturn(Optional.of(adminUser)).when(repository).findById(longArgumentCaptor.capture());
+        doReturn(adminUser).when(validatorLoggedUser).loggedUser(token);
+        doReturn(true).when(validatorLoggedUser).isUserContainsValidRole(userArgumentCaptor.capture());
+        var result = service.findById(1L, token);
+        assertNotNull(result.id());
+        assertEquals(UserResDto.class, result.getClass());
+    }
+
+    @Test
+    public void mustReturnUserIfUserOwnerResource(){
+        JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
+        doReturn(Optional.of(savedUser)).when(repository).findById(longArgumentCaptor.capture());
+        doReturn(savedUser).when(validatorLoggedUser).loggedUser(token);
+        doReturn(false).when(validatorLoggedUser).isUserContainsValidRole(userArgumentCaptor.capture());
+        doReturn(true).when(validatorLoggedUser).userIsOwnerResource(userArgumentCaptor.capture(), userArgumentCaptor.capture());
+        var result = service.findById(1L, token);
+        assertNotNull(result.id());
+        assertEquals(UserResDto.class, result.getClass());
+    }
+
+    @Test
+    public void mustReturnUAccessDeniedExceptionIfUserIsNotPresent(){
+        JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
+        doReturn(Optional.empty()).when(repository).findById(longArgumentCaptor.capture());
+        doReturn(savedUser).when(validatorLoggedUser).loggedUser(token);
+        doReturn(false).when(validatorLoggedUser).isUserContainsValidRole(userArgumentCaptor.capture());
+        assertThrows(AccessDeniedException.class, ()->{
+            service.findById(1L, token);
+        });
+    }
+
+    @Test
+    public void mustReturnUserIfUserNotOwnerResource(){
+        JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
+        doReturn(Optional.of(savedUser)).when(repository).findById(longArgumentCaptor.capture());
+        doReturn(User.builder().id(2L).build()).when(validatorLoggedUser).loggedUser(token);
+        doReturn(false).when(validatorLoggedUser).isUserContainsValidRole(userArgumentCaptor.capture());
+        assertThrows(AccessDeniedException.class, ()->{
+            service.findById(1L, token);
+        });
+    }
+
 }

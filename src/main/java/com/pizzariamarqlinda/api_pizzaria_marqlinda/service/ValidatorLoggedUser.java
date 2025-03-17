@@ -6,7 +6,6 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
@@ -27,14 +26,11 @@ public class ValidatorLoggedUser {
         return userSearched.get();
     }
 
-    public void validateUser(User loggedUser, User userReq){
-        if(!isUserContainsValidRole(loggedUser)){
-            if(!loggedUser.getId().equals(userReq.getId()))
-                throw new AccessDeniedException(ACCESS_DENIED);
-        }
+    public boolean userIsOwnerResource(User loggedUser, User userReq){
+       return loggedUser.getId().equals(userReq.getId());
     }
 
-    private boolean isUserContainsValidRole(User loggedUser){
+    public boolean isUserContainsValidRole(User loggedUser){
         for (Role role : loggedUser.getRoles()){
             if(role.getName().equals(ProfilesUserEnum.ADMIN_USER)){
                 return true;

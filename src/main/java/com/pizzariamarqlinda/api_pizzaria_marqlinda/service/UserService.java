@@ -13,6 +13,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -79,15 +80,21 @@ public class UserService {
         return user.get();
     }
 
+
     public UserResDto findById(Long id, JwtAuthenticationToken token) {
         Optional<User> userReqSearched = repository.findById(id);
-        if(userReqSearched.isEmpty())
-            throw new ObjectNotFoundException(NON_EXISTENT_USER);
         var loggedUser = validatorLoggedUser.loggedUser(token);
-        validatorLoggedUser.validateUser(loggedUser, userReqSearched.get());
-        return mapper.entityToUserResDto(userReqSearched.get());
+                                                                    /*Se um usuário comum estiver tentando acessar
+                                                                    um recurso que não é dele, a gente já recusa de cara por que
+                                                                    por definição ele não pode fazer este tipo de operação.
+                                                                    --Validação de segurança aqui*/
+        if(validatorLoggedUser.isUserContainsValidRole(loggedUser) || (userReqSearched.isPresent() && validatorLoggedUser.userIsOwnerResource(loggedUser, userReqSearched.get())))
+            if(userReqSearched.isPresent())
+                return mapper.entityToUserResDto(userReqSearched.get());
+            else
+                throw new ObjectNotFoundException(NON_EXISTENT_USER);
+        throw new AccessDeniedException("Acesso negado.");
     }
-
 
 
 }

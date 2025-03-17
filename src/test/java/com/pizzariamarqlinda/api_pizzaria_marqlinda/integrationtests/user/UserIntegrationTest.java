@@ -144,7 +144,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldReturn403WhenUserNoOwnsTheResource() throws Exception {
+    public void shouldReturn403WhenCommonUserNoOwnsTheResource() throws Exception {
         var user = MockUser.reqValidPost3();
         given()
                 .contentType(ContentType.JSON)
