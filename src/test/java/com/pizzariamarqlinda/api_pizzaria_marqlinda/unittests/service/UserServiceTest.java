@@ -1,6 +1,7 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.unittests.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
@@ -44,6 +45,9 @@ public class UserServiceTest {
     @Captor
     private ArgumentCaptor<ProfilesUserEnum> profileUserEnumArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<Long> longArgumentCaptor;
+
     @Mock
     private RoleService roleService;
 
@@ -66,6 +70,7 @@ public class UserServiceTest {
 
         savedUser = new User();
         savedUser.setId(1L);
+        savedUser.setEmail("saveduser@gmail.com");
 
     }
 
@@ -105,5 +110,22 @@ public class UserServiceTest {
         var result = service.all();
         assertEquals(1, result.size());
         assertEquals(UserResDto.class, result.getFirst().getClass());
+    }
+
+    @Test
+    public void mustReturnUserIfEmailExists(){
+        doReturn(Optional.of(savedUser)).when(repository).findByEmail(stringArgumentCaptor.capture());
+        var result = service.findByEmail("saveduser@gmail.com");
+        var emailParameter = stringArgumentCaptor.getValue();
+        assertNotNull(result.getId());
+        assertEquals(emailParameter, result.getEmail());
+    }
+
+    @Test
+    public void mustReturnAListEmptyIfEmailNotExist(){
+        doReturn(Optional.empty()).when(repository).findByEmail(stringArgumentCaptor.capture());
+        assertThrows(ObjectNotFoundException.class, ()->{
+            service.findByEmail("notexistuser@gmail.com");
+        });
     }
 }
