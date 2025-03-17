@@ -4,6 +4,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExist
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.RoleService;
@@ -18,6 +19,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -85,5 +88,22 @@ public class UserServiceTest {
             service.save(userReqExistsEmail);
         });
         verify(repository).findByEmail(anyString());
+    }
+
+    @Test
+    public void mustReturnAListEmpty(){
+        doReturn(List.of()).when(repository).findAll();
+        var result = service.all();
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void mustReturnAListRoleFromDatabase(){
+        List<User> users = new ArrayList<>();
+        users.add(savedUser);
+        doReturn(users).when(repository).findAll();
+        var result = service.all();
+        assertEquals(1, result.size());
+        assertEquals(UserResDto.class, result.getFirst().getClass());
     }
 }

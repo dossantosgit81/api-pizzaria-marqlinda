@@ -1,8 +1,9 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.RoleMapper;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.UserMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RolesResDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 public class RoleService  {
 
     private final RoleRepository repository;
-    private final RoleMapper mapper;
+    private final RoleMapper mapper = RoleMapper.INSTANCE;
 
     public Role findByNameCommonUser(ProfilesUserEnum profile){
         var role = repository.findByName(profile);
@@ -28,8 +29,11 @@ public class RoleService  {
         return role.get();
     }
 
-    public List<RolesResDto> all() {
-        return repository.findAll().stream()
+    public List<RoleResDto> all() {
+        List<Role> roles = repository.findAll();
+        if(roles.isEmpty())
+            return List.of();
+        return roles.stream()
                 .map(mapper::entityToRoleResDto)
                 .collect(Collectors.toList());
     }
