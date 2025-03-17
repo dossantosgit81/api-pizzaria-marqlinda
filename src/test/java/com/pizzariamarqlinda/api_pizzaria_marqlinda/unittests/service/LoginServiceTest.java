@@ -57,7 +57,7 @@ class LoginServiceTest {
     }
 
     @Test
-    void shouldLoginSuccessfully() {
+    void shouldReturnToken_WhenLoggingInWithValidCredentials() {
         LoginReqDto loginReq = new LoginReqDto("user@example.com", "password");
         when(userService.findByEmail(loginReq.email())).thenReturn(user);
         when(passwordEncoder.matches(loginReq.password(), user.getPassword())).thenReturn(true);

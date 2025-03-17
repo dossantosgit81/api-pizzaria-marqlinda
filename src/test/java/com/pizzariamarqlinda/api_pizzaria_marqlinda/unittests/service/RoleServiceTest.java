@@ -38,7 +38,7 @@ public class RoleServiceTest {
     private ArgumentCaptor<ProfilesUserEnum> captorProfileEnum;
 
     @Test
-    public void mustReturnARoleFormTheDatabase(){
+    public void shouldReturnRole_WhenFetchingItFromTheDatabaseAndRoleExists(){
         Role role = Role.builder().id(1L).name(ProfilesUserEnum.COMMON_USER).build();
         doReturn(Optional.of(role)).when(repository).findByName(captorProfileEnum.capture());
         var result = service.findByNameCommonUser(ProfilesUserEnum.COMMON_USER);
@@ -47,7 +47,7 @@ public class RoleServiceTest {
     }
 
     @Test
-    public void mustReturnARoleObject(){
+    public void mustReturnRoleTransient_WhenFetchingItFromTheDatabaseAndItDoesNotExist(){
         doReturn(Optional.empty()).when(repository).findByName(captorProfileEnum.capture());
         var result = service.findByNameCommonUser(ProfilesUserEnum.COMMON_USER);
         assertNull(result.getId());
@@ -55,14 +55,14 @@ public class RoleServiceTest {
     }
 
     @Test
-    public void mustReturnAListEmpty(){
+    public void shouldReturn0Roles_WhenListingAllRolesInTheDatabase(){
         doReturn(List.of()).when(repository).findAll();
         var result = service.all();
         assertEquals(0, result.size());
     }
 
     @Test
-    public void mustReturnAListRoleFromDatabase(){
+    public void mustReturnAllRoles_WhenThereAreRegisteredRoles(){
         List<Role> roles = new ArrayList<>();
         Role role = new Role(1L, ProfilesUserEnum.COMMON_USER, Set.of());
         roles.add(role);
