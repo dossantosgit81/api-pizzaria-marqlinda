@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class MockUser {
 
-    public static Map<String, Object> reqValidPost(){
+    public static Map<String, Object> reqCommonUserValidPost(){
         Map<String, Object> req = new HashMap<>();
         req.put("name", "John");
         req.put("lastName", "Travolta");
@@ -15,7 +15,7 @@ public class MockUser {
         return req;
     }
 
-    public static Map<String, Object> reqValidPost2(){
+    public static Map<String, Object> reqCommonUserValidPost2(){
         Map<String, Object> req = new HashMap<>();
         req.put("name", "Laercio");
         req.put("lastName", "Carlos");
@@ -25,7 +25,7 @@ public class MockUser {
         return req;
     }
 
-    public static Map<String, Object> reqValidPost3(){
+    public static Map<String, Object> reqCommonUserValidPost3(){
         Map<String, Object> req = new HashMap<>();
         req.put("name", "Brad");
         req.put("lastName", "Silva");
@@ -45,7 +45,7 @@ public class MockUser {
         return req;
     }
 
-    public static Map<String, Object> reqValidPost5(){
+    public static Map<String, Object> reqCommonUserValidPost5(){
         Map<String, Object> req = new HashMap<>();
         req.put("name", "Julio");
         req.put("lastName", "Lima");

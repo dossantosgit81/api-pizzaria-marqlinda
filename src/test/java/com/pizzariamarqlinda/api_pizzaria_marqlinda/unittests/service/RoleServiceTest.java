@@ -6,8 +6,6 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.RoleRepository;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.RoleService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

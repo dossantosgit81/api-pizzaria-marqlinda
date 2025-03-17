@@ -91,7 +91,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldRegisterUserSuccessfully(){
+    public void shouldRegisterUserSuccessfully_WhenSavingUser(){
         var role = Role.builder().id(1L).name(ProfilesUserEnum.COMMON_USER).build();
         doReturn(Optional.empty()).when(repository).findByEmail(stringArgumentCaptor.capture());
         doReturn(role).when(roleService).findByNameCommonUser(profileUserEnumArgumentCaptor.capture());
@@ -103,7 +103,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void shouldReturnErrorObjectAlreadyExists(){
+    public void shouldThrowObjectAlreadyException_WhenSavingUserWithExistingEmail(){
         when(repository.findByEmail(anyString())).thenReturn(Optional.of(savedUser));
         assertThrows(ObjectAlreadyExists.class, ()->{
             service.save(userReqExistsEmail);
@@ -112,14 +112,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void mustReturnAListEmpty(){
+    public void shouldReturnEmptyList_WhenFetchingAllUsers(){
         doReturn(List.of()).when(repository).findAll();
         var result = service.all();
         assertEquals(0, result.size());
     }
 
     @Test
-    public void mustReturnAListRoleFromDatabase(){
+    public void shouldReturnFilledList_WhenFetchingAllUsers(){
         List<User> users = new ArrayList<>();
         users.add(savedUser);
         doReturn(users).when(repository).findAll();
@@ -129,7 +129,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void mustReturnUserIfEmailExists(){
+    public void shouldReturnUser_WhenSearchingByEmail(){
         doReturn(Optional.of(savedUser)).when(repository).findByEmail(stringArgumentCaptor.capture());
         var result = service.findByEmail("saveduser@gmail.com");
         var emailParameter = stringArgumentCaptor.getValue();
@@ -138,7 +138,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void mustReturnAListEmptyIfEmailNotExist(){
+    public void shouldThrowObjectNotFoundException_WhenEmailDoesNotExist(){
         doReturn(Optional.empty()).when(repository).findByEmail(stringArgumentCaptor.capture());
         assertThrows(ObjectNotFoundException.class, ()->{
             service.findByEmail("notexistuser@gmail.com");
@@ -146,7 +146,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void mustReturnObjectNotFoundExceptionForLoggedAdminUser(){
+    public void shouldThrowObjectNotFoundException_WhenAdminUserAccessesNonExistentUser(){
         JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
         doReturn(Optional.empty()).when(repository).findById(longArgumentCaptor.capture());
         doReturn(adminUser).when(validatorLoggedUser).loggedUser(token);
@@ -157,7 +157,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void mustReturnUserIfUserLoggedHasAdminUser(){
+    public void shouldReturnUser_WhenLoggedInUserIsAnAdministrator(){
         JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
         doReturn(Optional.of(adminUser)).when(repository).findById(longArgumentCaptor.capture());
         doReturn(adminUser).when(validatorLoggedUser).loggedUser(token);
@@ -168,7 +168,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void mustReturnUserIfUserOwnerResource(){
+    public void shouldReturnUser_WhenLoggedInUserOwnsRequestedResource(){
         JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
         doReturn(Optional.of(savedUser)).when(repository).findById(longArgumentCaptor.capture());
         doReturn(savedUser).when(validatorLoggedUser).loggedUser(token);
@@ -180,7 +180,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void mustReturnUAccessDeniedExceptionIfUserIsNotPresent(){
+    public void shouldReturnAccessDenied_WhenUserTriesToAccessResourceThatIsNotTheirsAndDoesNotExist(){
         JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
         doReturn(Optional.empty()).when(repository).findById(longArgumentCaptor.capture());
         doReturn(savedUser).when(validatorLoggedUser).loggedUser(token);
@@ -191,7 +191,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void mustReturnUserIfUserNotOwnerResource(){
+    public void shouldReturnAccessDenied_WhenUserTriesToAccessResourceThatIsNotTheirs(){
         JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
         doReturn(Optional.of(savedUser)).when(repository).findById(longArgumentCaptor.capture());
         doReturn(User.builder().id(2L).build()).when(validatorLoggedUser).loggedUser(token);

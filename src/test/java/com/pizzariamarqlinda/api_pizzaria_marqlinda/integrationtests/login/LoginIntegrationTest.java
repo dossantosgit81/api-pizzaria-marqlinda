@@ -9,11 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Map;
 import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext
 public class LoginIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach
@@ -23,8 +25,8 @@ public class LoginIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldLogInSuccessfully(){
-        var user = MockUser.reqValidPost();
+    public void shouldReturn200_WhenValidCredentials(){
+        var user = MockUser.reqCommonUserValidPost();
         given()
                 .contentType(ContentType.JSON)
                 .body(user)
@@ -43,7 +45,7 @@ public class LoginIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void shouldReturn403WhenEmailIsInvalid(){
-        var user = MockUser.reqValidPost2();
+        var user = MockUser.reqCommonUserValidPost2();
         given()
                 .contentType(ContentType.JSON)
                 .body(user)
@@ -62,7 +64,7 @@ public class LoginIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void shouldReturn403WhenPasswordIsInvalid(){
-        var user = MockUser.reqValidPost3();
+        var user = MockUser.reqCommonUserValidPost3();
         given()
                 .contentType(ContentType.JSON)
                 .body(user)

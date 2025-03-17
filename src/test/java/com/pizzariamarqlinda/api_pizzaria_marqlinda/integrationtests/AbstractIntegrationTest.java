@@ -24,15 +24,16 @@ import java.util.stream.Stream;
 @Testcontainers
 public class AbstractIntegrationTest {
 
+    @Container
     private static final PostgreSQLContainer<?> postgreSQLContainer =
             new PostgreSQLContainer<>("postgres:16.8")
                     .withDatabaseName("testdb")
                     .withUsername("test")
                     .withPassword("test");
 
-    static {
-        postgreSQLContainer.start();
-    }
+//    static {
+//        postgreSQLContainer.start();
+//    }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {

@@ -9,12 +9,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext
 public class UserIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach
@@ -24,10 +28,10 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void mustSuccessfullyRegisterAUser() throws Exception {
+    public void shouldReturn201_WhenRegisteringUserWithValidAndFilledFields() throws Exception {
         given()
             .contentType(ContentType.JSON)
-            .body(MockUser.reqValidPost())
+            .body(MockUser.reqCommonUserValidPost())
         .when()
             .post("/api/users")
         .then()
@@ -35,7 +39,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldReturn409WhenRegisteringAUserWithADuplicateEmail() throws Exception {
+    public void shouldReturn409_WhenUserWithSameEmailAlreadyExists() throws Exception {
         given()
                 .contentType(ContentType.JSON)
                 .body(MockUser.reqInvalidPost())
@@ -51,7 +55,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldReturn422WhenInvalidFields() throws Exception {
+    public void shouldReturn422_WhenThereAreInvalidFields() throws Exception {
         given()
                 .contentType(ContentType.JSON)
                 .body(MockUser.reqInvalidFields())
@@ -62,8 +66,8 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldReturn403WhenAccessedByACommonUser() throws Exception {
-        var user = MockUser.reqValidPost2();
+    public void shouldReturn403_WhenCommonUserTriesToAccessUserList() throws Exception {
+        var user = MockUser.reqCommonUserValidPost2();
         //Post a user
         given()
                 .contentType(ContentType.JSON)
@@ -92,7 +96,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldReturn200WhenUserHasHoleAdminWhenAccessingUsers() throws Exception {
+    public void shouldReturn200_WhenAdminUserAccessesUserList() throws Exception {
         var user = MockUser.reqUserAdminLogin();
         //Get token
         String token =
@@ -108,21 +112,30 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         //Assert
         given()
                 .header("Authorization", "Bearer "+token)
-                .when()
+        .when()
                 .get("/api/users")
-                .then()
+        .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
     @Test
-    public void shouldReturn200WhenUserOwnsTheResource() throws Exception {
-        var user = MockUser.reqValidPost3();
-        given()
+    public void shouldReturn200_WhenCommonUserRequestsOwnUserDetails() throws Exception {
+        var user = MockUser.reqCommonUserValidPost3();
+        var response = given()
                 .contentType(ContentType.JSON)
-                .body(MockUser.reqValidPost3())
+                .body(MockUser.reqCommonUserValidPost3())
         .when()
                 .post("/api/users")
-        .then();
+        .then()
+                .extract()
+                .response();
+
+        Pattern pattern = Pattern.compile( "/users/(\\d+)");
+        Matcher matcher = pattern.matcher(response.header("Location"));
+        String id = "";
+        if(matcher.find()){
+            id = matcher.group(1);
+        }
 
         String token =
                 given()
@@ -134,21 +147,20 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
                         .extract()
                         .path("token");
 
-
         given()
                 .header("Authorization", "Bearer "+token)
-                .when()
-                .get("/api/users/1")
-                .then()
+        .when()
+                .get("/api/users/"+id)
+        .then()
                 .statusCode(HttpStatus.OK.value());
     }
 
     @Test
-    public void shouldReturn403WhenCommonUserNoOwnsTheResource() throws Exception {
-        var user = MockUser.reqValidPost3();
+    public void shouldReturn403WhenCommonUserIsNotTheRequestedUser() throws Exception {
+        var user = MockUser.reqCommonUserValidPost3();
         given()
                 .contentType(ContentType.JSON)
-                .body(MockUser.reqValidPost3())
+                .body(MockUser.reqCommonUserValidPost3())
                 .when()
                 .post("/api/users");
 
@@ -179,18 +191,18 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldReturn200WhenUserHasHoleAdminWhenAccessingAUser() throws Exception {
+    public void shouldReturn200_WhenAdminUserAccessesSingleUserOtherThanThemselves() throws Exception {
         //O Cadastro está acontecendo no import.sql por ele ser um usuário ADMIN
         var user = MockUser.reqUserAdminLogin();
         given()
                 .contentType(ContentType.JSON)
-                .body(MockUser.reqValidPost3())
+                .body(MockUser.reqCommonUserValidPost3())
                 .when()
                 .post("/api/users");
 
         given()
                 .contentType(ContentType.JSON)
-                .body(MockUser.reqValidPost5())
+                .body(MockUser.reqCommonUserValidPost5())
                 .when()
                 .post("/api/users");
 
