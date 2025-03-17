@@ -15,7 +15,6 @@ import java.util.Map;
 import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext
 public class LoginIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach
