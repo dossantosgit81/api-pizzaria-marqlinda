@@ -1,8 +1,6 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.handler;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectAlreadyExists;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectSessionExpiredExceptionException;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.*;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.dto.ErrorResponseDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.dto.FieldErrorDto;
 import org.springframework.http.HttpStatus;
@@ -53,6 +51,18 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponseDto badCredentialsException(BadCredentialsException ex){
         return ErrorResponseDto.responseNotFound(HttpStatus.FORBIDDEN.value(),ex.getMessage());
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDto fileNotFoundException(FileNotFoundException ex){
+        return ErrorResponseDto.responseNotFound(HttpStatus.NOT_FOUND.value(),ex.getMessage());
+    }
+
+    @ExceptionHandler(FileStorageException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponseDto fileStorageException(FileNotFoundException ex){
+        return ErrorResponseDto.responseNotFound(HttpStatus.INTERNAL_SERVER_ERROR.value(),ex.getMessage());
     }
 
 }

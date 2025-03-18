@@ -30,7 +30,7 @@ public class UserService {
     private static final String NON_EXISTENT_USER = "Usuário inexistente.";
     private static final String EXISTS_EMAIL = "Já existe um usuário com esse email.";
 
-    private final ValidatorLoggedUser validatorLoggedUser;
+    private final ValidatorLoggedUserService validatorLoggedUser;
     private final UserMapper mapper = UserMapper.INSTANCE;
 
     private final UserRepository repository;

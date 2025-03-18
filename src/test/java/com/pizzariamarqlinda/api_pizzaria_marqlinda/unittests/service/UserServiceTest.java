@@ -10,7 +10,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.RoleService;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.ValidatorLoggedUser;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.ValidatorLoggedUserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,7 +56,7 @@ public class UserServiceTest {
     private RoleService roleService;
 
     @Mock
-    private ValidatorLoggedUser validatorLoggedUser;
+    private ValidatorLoggedUserService validatorLoggedUser;
 
     UserReqDto newUserSuccess;
     User savedUser;

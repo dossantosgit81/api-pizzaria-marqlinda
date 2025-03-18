@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class ValidatorLoggedUser {
+public class ValidatorLoggedUserService {
 
     private static final String ACCESS_DENIED = "Acesso negado.";
 
