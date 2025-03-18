@@ -30,7 +30,7 @@ public class ValidatorLoggedUser {
        return loggedUser.getId().equals(userReq.getId());
     }
 
-    public boolean isUserContainsValidRole(User loggedUser){
+    public boolean isUserHasRoleAdmin(User loggedUser){
         for (Role role : loggedUser.getRoles()){
             if(role.getName().equals(ProfilesUserEnum.ADMIN_USER)){
                 return true;

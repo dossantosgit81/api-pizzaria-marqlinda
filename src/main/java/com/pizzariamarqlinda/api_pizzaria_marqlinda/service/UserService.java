@@ -88,7 +88,7 @@ public class UserService {
                                                                     um recurso que não é dele, a gente já recusa de cara por que
                                                                     por definição ele não pode fazer este tipo de operação.
                                                                     --Validação de segurança aqui*/
-        if(validatorLoggedUser.isUserContainsValidRole(loggedUser) || (userReqSearched.isPresent() && validatorLoggedUser.userIsOwnerResource(loggedUser, userReqSearched.get())))
+        if(validatorLoggedUser.isUserHasRoleAdmin(loggedUser) || (userReqSearched.isPresent() && validatorLoggedUser.userIsOwnerResource(loggedUser, userReqSearched.get())))
             if(userReqSearched.isPresent())
                 return mapper.entityToUserResDto(userReqSearched.get());
             else

@@ -150,7 +150,7 @@ public class UserServiceTest {
         JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
         doReturn(Optional.empty()).when(repository).findById(longArgumentCaptor.capture());
         doReturn(adminUser).when(validatorLoggedUser).loggedUser(token);
-        doReturn(true).when(validatorLoggedUser).isUserContainsValidRole(userArgumentCaptor.capture());
+        doReturn(true).when(validatorLoggedUser).isUserHasRoleAdmin(userArgumentCaptor.capture());
         assertThrows(ObjectNotFoundException.class, ()->{
             service.findById(1L, token);
         });
@@ -161,7 +161,7 @@ public class UserServiceTest {
         JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
         doReturn(Optional.of(adminUser)).when(repository).findById(longArgumentCaptor.capture());
         doReturn(adminUser).when(validatorLoggedUser).loggedUser(token);
-        doReturn(true).when(validatorLoggedUser).isUserContainsValidRole(userArgumentCaptor.capture());
+        doReturn(true).when(validatorLoggedUser).isUserHasRoleAdmin(userArgumentCaptor.capture());
         var result = service.findById(1L, token);
         assertNotNull(result.id());
         assertEquals(UserResDto.class, result.getClass());
@@ -172,7 +172,7 @@ public class UserServiceTest {
         JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
         doReturn(Optional.of(savedUser)).when(repository).findById(longArgumentCaptor.capture());
         doReturn(savedUser).when(validatorLoggedUser).loggedUser(token);
-        doReturn(false).when(validatorLoggedUser).isUserContainsValidRole(userArgumentCaptor.capture());
+        doReturn(false).when(validatorLoggedUser).isUserHasRoleAdmin(userArgumentCaptor.capture());
         doReturn(true).when(validatorLoggedUser).userIsOwnerResource(userArgumentCaptor.capture(), userArgumentCaptor.capture());
         var result = service.findById(1L, token);
         assertNotNull(result.id());
@@ -184,7 +184,7 @@ public class UserServiceTest {
         JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
         doReturn(Optional.empty()).when(repository).findById(longArgumentCaptor.capture());
         doReturn(savedUser).when(validatorLoggedUser).loggedUser(token);
-        doReturn(false).when(validatorLoggedUser).isUserContainsValidRole(userArgumentCaptor.capture());
+        doReturn(false).when(validatorLoggedUser).isUserHasRoleAdmin(userArgumentCaptor.capture());
         assertThrows(AccessDeniedException.class, ()->{
             service.findById(1L, token);
         });
@@ -195,7 +195,7 @@ public class UserServiceTest {
         JwtAuthenticationToken token = mock(JwtAuthenticationToken.class);
         doReturn(Optional.of(savedUser)).when(repository).findById(longArgumentCaptor.capture());
         doReturn(User.builder().id(2L).build()).when(validatorLoggedUser).loggedUser(token);
-        doReturn(false).when(validatorLoggedUser).isUserContainsValidRole(userArgumentCaptor.capture());
+        doReturn(false).when(validatorLoggedUser).isUserHasRoleAdmin(userArgumentCaptor.capture());
         assertThrows(AccessDeniedException.class, ()->{
             service.findById(1L, token);
         });
