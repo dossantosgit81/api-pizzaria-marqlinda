@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@DirtiesContext
 public class ProductIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach
@@ -92,7 +91,10 @@ public class ProductIntegrationTest extends AbstractIntegrationTest {
                     .multiPart("description", "Product")
                     .multiPart("details", "Product test")
                     .multiPart("price", "37.90")
-                    .multiPart("file", new File("./src/test/resources/storage/test-image.jpg"))
+                    .multiPart("available", true)
+                    .multiPart("highlight", false)
+                    .multiPart("price", "37.90")
+                    .multiPart("file", new File("./src/test/resources/storage/test-controller.jpg"))
                     .contentType("multipart/form-data")
                 .when()
                     .post("/api/products")
@@ -100,10 +102,18 @@ public class ProductIntegrationTest extends AbstractIntegrationTest {
                     .extract()
                     .response();
 
+        Pattern pattern = Pattern.compile( "/users/(\\d+)");
+        Matcher matcher = pattern.matcher(response.header("Location"));
+        String id = "";
+        if(matcher.find()){
+            id = matcher.group(1);
+        }
+
+
         given()
                 .header("Authorization", "Bearer "+token)
         .when()
-                .get("/api/products/"+1)
+                .get("/api/"+id+"/image")
         .then()
                 .log().all()
                 .statusCode(HttpStatus.OK.value());
