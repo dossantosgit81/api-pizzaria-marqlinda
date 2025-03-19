@@ -24,6 +24,18 @@ public class LoginIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void shouldReturn422_WhenInvalidFields(){
+        var user = MockUserLogin.reqInvalidFields();
+        given()
+                .contentType(ContentType.JSON)
+                .body(Map.of("email", user.get("email"), "password", user.get("password")))
+        .when()
+                .post("/api/login")
+        .then()
+                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+    }
+
+    @Test
     public void shouldReturn200_WhenValidCredentials(){
         var user = MockUser.reqCommonUserValidPost();
         given()

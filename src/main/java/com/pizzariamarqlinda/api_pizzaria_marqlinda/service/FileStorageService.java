@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,8 +23,8 @@ public class FileStorageService {
         this.location = Paths.get(fileStorageConfig.getUploadDir()).toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.location);
-        }catch (Exception e){
-            throw new FileStorageException("Não foi possivel armazenar o arquivo.");
+        }catch (IOException e){
+            throw new FileStorageException("Não foi possivel criar o diretório do arquivo.");
         }
     }
 
@@ -39,7 +40,7 @@ public class FileStorageService {
             Path targetLocation = this.location.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return targetLocation.toString();
-        }catch (Exception e){
+        }catch (IOException e){
             throw new FileStorageException("Não foi possivel armazenar o arquivo. Tente novamente.");
         }
     }
