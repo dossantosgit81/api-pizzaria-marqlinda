@@ -5,6 +5,8 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.FileStorageExcepti
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.InvalidFormatImageException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.WrapFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +25,8 @@ public class FileStorageService {
     private final Path location;
 
     @Autowired
+    private FileStorageConfig fileStorageConfig;
+
     public FileStorageService(FileStorageConfig fileStorageConfig){
         this.location = Paths.get(fileStorageConfig.getUploadDir()).toAbsolutePath().normalize();
         try {
@@ -49,6 +53,15 @@ public class FileStorageService {
             return new WrapFile(fileName, targetLocation.toString());
         }catch (IOException e){
             throw new FileStorageException("Não foi possivel armazenar o arquivo. Tente novamente.");
+        }
+    }
+
+    public Resource getFile(String imgUrl){
+        try {
+           Path imagePath = Paths.get(imgUrl);
+           return new UrlResource(imagePath.toUri());
+        }catch (Exception e){
+            throw new FileStorageException("Algo deu errado! Tente novamente.");
         }
     }
 }

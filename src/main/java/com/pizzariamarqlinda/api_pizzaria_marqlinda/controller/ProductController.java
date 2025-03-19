@@ -5,6 +5,9 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.ProductService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,9 +35,20 @@ public class ProductController {
             var errors = violations.stream().map(ConstraintViolation::getMessage).toList();
             return ResponseEntity.unprocessableEntity().body(errors);
         }
-
         Long idProduct = service.save(product, file);
         URI uri = uriBuilder.path("/api/products/{id}").buildAndExpand(idProduct).toUri();
         return ResponseEntity.created(uri).body(null);
+    }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<Resource> file (@PathVariable Long productId){
+        Resource image = service.getFile(productId);
+        if(image.exists() && image.isReadable()){
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\""+image.getFilename() + "\"")
+                    .body(image);
+        }
+        return ResponseEntity.internalServerError().build();
     }
 }

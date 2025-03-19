@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Product {
 
     @Id
