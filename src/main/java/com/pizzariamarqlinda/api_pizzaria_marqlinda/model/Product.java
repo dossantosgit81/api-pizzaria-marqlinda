@@ -28,6 +28,9 @@ public class Product {
 
     private Boolean highlight;
 
+    @Column(name = "FILE_NAME")
+    private String fileName;
+
     @Column(name = "IMG_URL")
     private String imgUrl;
 }

@@ -2,6 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.FileStorageConfig;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.FileStorageException;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.WrapFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,8 +29,8 @@ public class FileStorageService {
         }
     }
 
-    public String store(MultipartFile file){
-        if(file.getOriginalFilename() == null){
+    public WrapFile store(MultipartFile file){
+        if("".equals(file.getOriginalFilename())){
             throw new FileStorageException("Nome de arquivo inválido.");
         }
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -39,10 +40,11 @@ public class FileStorageService {
             }
             Path targetLocation = this.location.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            return targetLocation.toString();
+            return new WrapFile(fileName, targetLocation.toString());
         }catch (IOException e){
             throw new FileStorageException("Não foi possivel armazenar o arquivo. Tente novamente.");
         }
     }
-
 }
+
+

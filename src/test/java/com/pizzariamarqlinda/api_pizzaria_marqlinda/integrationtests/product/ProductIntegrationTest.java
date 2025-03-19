@@ -51,15 +51,15 @@ public class ProductIntegrationTest extends AbstractIntegrationTest {
         //Req
         given()
                 .header("Authorization", "Bearer "+token)
-                .multiPart("description", "Pizza de calabresa")
-                .multiPart("details", "Queijo")
-                .multiPart("price", "45")
+                .multiPart("description", "")
+                .multiPart("details", "")
+                .multiPart("price", "")
                 .multiPart("file", new File("/home/rafael/Documents/storage/test-image.jpeg"))
                 .contentType("multipart/form-data")
         .when()
                 .post("/api/products")
         .then()
-                .statusCode(HttpStatus.CREATED.value());
+                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
     }
 
 }
