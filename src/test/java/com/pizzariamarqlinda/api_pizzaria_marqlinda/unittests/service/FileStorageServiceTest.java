@@ -2,6 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.unittests.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.FileStorageConfig;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.FileStorageException;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.InvalidFormatImageException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.WrapFile;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.FileStorageService;
 import org.junit.jupiter.api.Assertions;
@@ -60,6 +61,19 @@ public class FileStorageServiceTest {
                 "content".getBytes()
         );
         Assertions.assertThrows(FileStorageException.class, ()->{
+            fileStorageService.store(file);
+        });
+    }
+
+    @Test
+    public void shouldReturnInvalidFormatImageException_WhenInvalidContentType(){
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "../null",
+                "application/pdf",
+                "content".getBytes()
+        );
+        Assertions.assertThrows(InvalidFormatImageException.class, ()->{
             fileStorageService.store(file);
         });
     }

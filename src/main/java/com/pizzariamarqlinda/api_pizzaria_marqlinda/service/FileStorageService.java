@@ -2,6 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.FileStorageConfig;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.FileStorageException;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.InvalidFormatImageException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.WrapFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 @Service
 public class FileStorageService {
 
+    private static final List<String> TIPOS_PERMITIDOS = List.of("image/jpeg", "image/png", "image/gif", "image/webp");
     private final Path location;
 
     @Autowired
@@ -30,6 +33,9 @@ public class FileStorageService {
     }
 
     public WrapFile store(MultipartFile file){
+        if(!TIPOS_PERMITIDOS.contains(file.getContentType())){
+            throw new InvalidFormatImageException("Apenas imagens (JPEG, PNG, GIF, WEBP) são permitidas.");
+        }
         if("".equals(file.getOriginalFilename())){
             throw new FileStorageException("Nome de arquivo inválido.");
         }
