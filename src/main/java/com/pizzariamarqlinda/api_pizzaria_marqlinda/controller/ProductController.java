@@ -40,9 +40,9 @@ public class ProductController {
         return ResponseEntity.created(uri).body(null);
     }
 
-    @GetMapping("/{id}/image")
-    public ResponseEntity<Resource> file (@PathVariable Long productId){
-        Resource image = service.getFile(productId);
+    @GetMapping("{id}/image")
+    public ResponseEntity<Resource> file (@PathVariable Long id){
+        Resource image = service.getFile(id);
         if(image.exists() && image.isReadable()){
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)

@@ -5,10 +5,12 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.integrationtests.AbstractInt
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.util.MockUser;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.containsString;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class ProductIntegrationTest extends AbstractIntegrationTest {
@@ -56,7 +59,7 @@ public class ProductIntegrationTest extends AbstractIntegrationTest {
                 .multiPart("description", "")
                 .multiPart("details", "")
                 .multiPart("price", "")
-                .multiPart("file", new File("./src/test/resources/storage/test-image.jpg"))
+                .multiPart("file", new File("./src/test/resources/storage/test-controller.jpg"))
                 .contentType("multipart/form-data")
         .when()
                 .post("/api/products")
@@ -102,22 +105,26 @@ public class ProductIntegrationTest extends AbstractIntegrationTest {
                     .extract()
                     .response();
 
-        Pattern pattern = Pattern.compile( "/users/(\\d+)");
+        Pattern pattern = Pattern.compile( "/products/(\\d+)");
         Matcher matcher = pattern.matcher(response.header("Location"));
         String id = "";
+
         if(matcher.find()){
             id = matcher.group(1);
         }
 
-
+        System.out.println("-----------------------------HERE---------------------------"+id);
         given()
-                .header("Authorization", "Bearer "+token)
+               .pathParam("id", id)
+                .headers("Authorization", "Bearer "+ token)
         .when()
-                .get("/api/"+id+"/image")
+
+                .get("/api/products/{id}/image")
         .then()
                 .log().all()
-                .statusCode(HttpStatus.OK.value());
-
+                .statusCode(HttpStatus.OK.value())
+                .contentType("application/octet-stream")
+                .header("Content-Disposition", containsString("inline; filename="));
     }
 
 }
