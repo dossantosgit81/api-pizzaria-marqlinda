@@ -4,7 +4,6 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

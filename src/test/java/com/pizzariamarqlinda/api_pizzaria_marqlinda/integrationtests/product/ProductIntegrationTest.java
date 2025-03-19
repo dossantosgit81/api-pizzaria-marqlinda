@@ -9,7 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.annotation.DirtiesContext;
 
+import java.io.File;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,23 +20,46 @@ import java.util.regex.Pattern;
 import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext
 public class ProductIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach
     public void setUp(){
         port = TestConfigs.SERVER_PORT;
-        defaultParser = Parser.JSON;
     }
 
     @Test
     public void shouldReturn422_WhenThereAreInvalidFields() throws Exception {
+        var user = MockUser.reqCommonUserValidPost();
         given()
                 .contentType(ContentType.JSON)
-                .body(MockUser.reqInvalidFields())
+                .body(user)
         .when()
-                .post("/api/users")
+                .post("/api/users");
+
+        //Get token
+        String token =
+                given()
+                        .contentType(ContentType.JSON)
+                        .body(Map.of("email", user.get("email"), "password", user.get("password")))
+                .when()
+                        .post("/api/login")
+                .then()
+                        .extract()
+                        .path("token");
+
+        //Req
+        given()
+                .header("Authorization", "Bearer "+token)
+                .multiPart("description", "Pizza de calabresa")
+                .multiPart("details", "Queijo")
+                .multiPart("price", "45")
+                .multiPart("file", new File("/home/rafael/Documents/storage/test-image.jpeg"))
+                .contentType("multipart/form-data")
+        .when()
+                .post("/api/products")
         .then()
-                .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+                .statusCode(HttpStatus.CREATED.value());
     }
 
 }

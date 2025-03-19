@@ -20,6 +20,8 @@ public class Product {
 
     private String description;
 
+    private String details;
+
     private BigDecimal price;
 
     private Boolean available;
