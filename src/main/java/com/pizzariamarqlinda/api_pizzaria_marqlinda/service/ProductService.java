@@ -3,15 +3,14 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.ProductMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Product;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.WrapFile;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.WrapFile;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
 import java.util.Optional;
 
 @Service
@@ -34,8 +33,13 @@ public class ProductService {
         return repository.save(productConverted).getId();
     }
 
+    public void delete(Long id){
+        var product = repository.findById(id).orElseThrow(()-> new ObjectNotFoundException("Produto não encontrado."));
+        repository.delete(product);
+    }
+
     public Resource getFile(Long id){
-       Optional<Product> productSearched = repository.findById(1L);
+       Optional<Product> productSearched = repository.findById(id);
        if(productSearched.isPresent()){
            return fileStorageService.getFile(productSearched.get().getImgUrl());
        }

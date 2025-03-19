@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,6 +28,7 @@ public class ProductController {
     private final Validator validator;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
     public ResponseEntity<List<String>> create(@ModelAttribute ProductReqDto product,
                                        @RequestParam MultipartFile file,
                                        UriComponentsBuilder uriBuilder){
@@ -50,5 +52,11 @@ public class ProductController {
                     .body(image);
         }
         return ResponseEntity.internalServerError().build();
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Resource> delete (@PathVariable Long id){
+         service.delete(id);
+         return ResponseEntity.noContent().build();
     }
 }
