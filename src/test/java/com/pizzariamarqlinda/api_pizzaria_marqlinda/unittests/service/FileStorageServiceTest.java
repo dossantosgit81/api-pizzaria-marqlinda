@@ -65,17 +65,4 @@ public class FileStorageServiceTest {
         });
     }
 
-    @Test
-    public void shouldReturnInvalidFormatImageException_WhenInvalidContentType(){
-        MockMultipartFile file = new MockMultipartFile(
-                "file",
-                "../null",
-                "application/pdf",
-                "content".getBytes()
-        );
-        Assertions.assertThrows(InvalidFormatImageException.class, ()->{
-            fileStorageService.store(file);
-        });
-    }
-
 }

@@ -65,4 +65,10 @@ public class GlobalExceptionHandler {
         return ErrorResponseDto.responseNotFound(HttpStatus.INTERNAL_SERVER_ERROR.value(),ex.getMessage());
     }
 
+    @ExceptionHandler(InvalidFormatImageException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseDto invalidFormatImageException(InvalidFormatImageException ex){
+        return ErrorResponseDto.responseNotFound(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+    }
+
 }

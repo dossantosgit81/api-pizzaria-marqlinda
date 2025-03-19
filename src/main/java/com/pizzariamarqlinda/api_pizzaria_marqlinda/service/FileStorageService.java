@@ -21,7 +21,6 @@ import java.util.List;
 @Service
 public class FileStorageService {
 
-    private static final List<String> TIPOS_PERMITIDOS = List.of("image/jpeg", "image/png", "image/gif", "image/webp");
     private final Path location;
 
     @Autowired
@@ -37,9 +36,6 @@ public class FileStorageService {
     }
 
     public WrapFile store(MultipartFile file){
-        if(!TIPOS_PERMITIDOS.contains(file.getContentType())){
-            throw new InvalidFormatImageException("Apenas imagens (JPEG, PNG, GIF, WEBP) são permitidas.");
-        }
         if("".equals(file.getOriginalFilename())){
             throw new FileStorageException("Nome de arquivo inválido.");
         }
