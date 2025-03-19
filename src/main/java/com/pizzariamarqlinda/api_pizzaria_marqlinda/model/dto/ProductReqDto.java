@@ -5,9 +5,10 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record ProductReqDto(String description,
-                            String details,
-                            BigDecimal price,
+public record ProductReqDto(
+        @NotBlank(message = "Campo deve estar preenchido.") String description,
+        @NotBlank(message = "Campo deve estar preenchido.") String details,
+        @NotNull(message = "Campo deve estar preenchido.") BigDecimal price,
                             Boolean available,
                             Boolean highlight) {
 }
