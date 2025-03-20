@@ -6,6 +6,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.UserMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Cart;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
@@ -13,6 +14,8 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -64,13 +67,9 @@ public class UserService {
             throw new ObjectAlreadyExists(EXISTS_EMAIL);
     }
 
-    public List<UserResDto> all() {
-        List<User> users = repository.findAll();
-        if(users.isEmpty())
-            return List.of();
-        return users.stream()
-                .map(mapper::entityToUserResDto)
-                .collect(Collectors.toList());
+    public Page<UserResDto> all(Pageable pageable) {
+        var users = repository.findAll(pageable);
+        return users.map(mapper::entityToUserResDto);
     }
 
     public User findByEmail(String email) {

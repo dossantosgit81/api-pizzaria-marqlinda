@@ -2,6 +2,8 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.integrationtests.user;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.TestConfigs;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.integrationtests.AbstractIntegrationTest;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.PageResponseDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.util.MockUser;
 import io.restassured.http.ContentType;
 import io.restassured.parsing.Parser;
@@ -9,7 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -88,6 +92,8 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
         //Assert
         given()
                 .header("Authorization", "Bearer "+token)
+                .param("pageNumber", "0")
+                .param("pageSize", "1")
                 .when()
                     .get("/api/users")
                 .then()
@@ -107,10 +113,11 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
                     .then()
                         .extract()
                         .path("token");
-
         //Assert
         given()
                 .header("Authorization", "Bearer "+token)
+                .param("pageNumber", "0")
+                .param("pageSize", "1")
         .when()
                 .get("/api/users")
         .then()

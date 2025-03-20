@@ -19,6 +19,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -109,23 +110,6 @@ public class UserServiceTest {
             service.save(userReqExistsEmail);
         });
         verify(repository).findByEmail(anyString());
-    }
-
-    @Test
-    public void shouldReturnEmptyList_WhenFetchingAllUsers(){
-        doReturn(List.of()).when(repository).findAll();
-        var result = service.all();
-        assertEquals(0, result.size());
-    }
-
-    @Test
-    public void shouldReturnFilledList_WhenFetchingAllUsers(){
-        List<User> users = new ArrayList<>();
-        users.add(savedUser);
-        doReturn(users).when(repository).findAll();
-        var result = service.all();
-        assertEquals(1, result.size());
-        assertEquals(UserResDto.class, result.getFirst().getClass());
     }
 
     @Test

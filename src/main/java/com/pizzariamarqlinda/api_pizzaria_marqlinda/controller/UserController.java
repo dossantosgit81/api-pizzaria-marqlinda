@@ -1,10 +1,13 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.PageResponseDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,9 +34,13 @@ public class UserController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
-    public ResponseEntity<List<UserResDto>> findAll(){
-
-        return ResponseEntity.ok(service.all());
+    public ResponseEntity<PageResponseDto<UserResDto>> findAll(@RequestParam int pageNumber,
+                                                    @RequestParam int pageSize,
+                                                    @RequestParam(defaultValue = "id") String sortBy,
+                                                    @RequestParam(defaultValue = "ASC") String direction){
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        var res = service.all(PageRequest.of(pageNumber, pageSize, sort));
+        return ResponseEntity.ok(new PageResponseDto<>(res));
     }
 
     @GetMapping(value = "{id}",produces = {MediaType.APPLICATION_JSON_VALUE})
