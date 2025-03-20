@@ -9,6 +9,5 @@ public record ProductReqDto(
         @NotBlank(message = "Campo description deve estar preenchido.") String description,
         @NotBlank(message = "Campo details deve estar preenchido.") String details,
         @NotNull(message = "Campo price deve estar preenchido.") BigDecimal price,
-                            Boolean available,
-                            Boolean highlight) {
+        Boolean highlight) {
 }

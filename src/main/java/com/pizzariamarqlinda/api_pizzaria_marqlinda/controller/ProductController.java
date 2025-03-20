@@ -1,11 +1,16 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.PageResponseDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.ProductService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -55,8 +60,19 @@ public class ProductController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
     public ResponseEntity<Resource> delete (@PathVariable Long id){
          service.delete(id);
          return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PageResponseDto<ProductResDto>> all(@RequestParam int pageNumber,
+                                                   @RequestParam int pageSize,
+                                                   @RequestParam(defaultValue = "id") String sortBy,
+                                                   @RequestParam(defaultValue = "ASC") String direction){
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        var res = service.all(PageRequest.of(pageNumber, pageSize, sort));
+        return ResponseEntity.ok(new PageResponseDto<>(res));
     }
 }

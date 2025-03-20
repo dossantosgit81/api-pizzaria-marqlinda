@@ -54,7 +54,6 @@ public class ProductServiceTest {
                 "Pizza de calabresa",
                 "Calabresa, queijo, azeitona",
                 new BigDecimal("50.00"),
-                null,
                 null);
         var product = Product.builder().id(1L).build();
         doReturn(new WrapFile("fake", "fake")).when(fileStorageService).store(file);

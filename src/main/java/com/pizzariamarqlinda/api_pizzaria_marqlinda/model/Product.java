@@ -25,8 +25,6 @@ public class Product {
 
     private BigDecimal price;
 
-    private Boolean available;
-
     private Boolean highlight;
 
     @Column(name = "FILE_NAME")

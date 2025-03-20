@@ -154,7 +154,6 @@ public class ProductIntegrationTest extends AbstractIntegrationTest {
                         .header("Authorization", "Bearer "+token)
                         .multiPart("description", "Product")
                         .multiPart("details", "Product test")
-                        .multiPart("price", "37.90")
                         .multiPart("available", true)
                         .multiPart("highlight", false)
                         .multiPart("price", "37.90")
@@ -182,7 +181,6 @@ public class ProductIntegrationTest extends AbstractIntegrationTest {
         .then()
                 .log().all()
                 .statusCode(HttpStatus.NO_CONTENT.value());
-
     }
 
 }

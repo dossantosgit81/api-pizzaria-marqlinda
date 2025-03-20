@@ -1,10 +1,8 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Product;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductReqDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductResDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -12,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
-    Product ProductReqDtoToEntity(ProductReqDto productReqDto);
+    Product productReqDtoToEntity(ProductReqDto productReqDto);
+    ProductResDto entityToProductResDto(Product product);
 
 }
