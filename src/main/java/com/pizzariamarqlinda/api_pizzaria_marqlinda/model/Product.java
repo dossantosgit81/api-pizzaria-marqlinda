@@ -32,4 +32,8 @@ public class Product {
 
     @Column(name = "IMG_URL")
     private String imgUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "CATEGORY_ID")
+    private Category category;
 }

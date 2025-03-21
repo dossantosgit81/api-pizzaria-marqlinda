@@ -8,7 +8,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
@@ -35,6 +34,7 @@ public class ProductController {
     @PostMapping
     @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
     public ResponseEntity<List<String>> create(@ModelAttribute ProductReqDto product,
+                                       @RequestParam("idCategory") Long idCategory,
                                        @RequestParam MultipartFile file,
                                        UriComponentsBuilder uriBuilder){
         Set<ConstraintViolation<ProductReqDto>> violations = validator.validate(product);
@@ -42,9 +42,9 @@ public class ProductController {
             var errors = violations.stream().map(ConstraintViolation::getMessage).toList();
             return ResponseEntity.unprocessableEntity().body(errors);
         }
-        Long idProduct = service.save(product, file);
+        Long idProduct = service.save(product, idCategory, file);
         URI uri = uriBuilder.path("/api/products/{id}").buildAndExpand(idProduct).toUri();
-        return ResponseEntity.created(uri).body(null);
+        return ResponseEntity.created(uri).build();
     }
 
     @GetMapping("{id}/image")

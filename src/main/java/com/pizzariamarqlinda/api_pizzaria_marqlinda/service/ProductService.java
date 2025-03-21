@@ -2,6 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.ProductMapper;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Category;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Product;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductResDto;
@@ -23,16 +24,18 @@ public class ProductService {
     private final ProductMapper mapper = ProductMapper.INSTANCE;
 
     private final ProductRepository repository;
-
     private final FileStorageService fileStorageService;
+    private final CategoryService categoryService;
 
-    public Long save(ProductReqDto productReqDto, MultipartFile file){
+    public Long save(ProductReqDto productReqDto, Long idCategory, MultipartFile file){
+        var category = categoryService.findById(idCategory);
         Product productConverted = mapper.productReqDtoToEntity(productReqDto);
         WrapFile objectWrapFile = fileStorageService.store(file);
         String imgUrl = objectWrapFile.getImgUrl();
         String fileName = objectWrapFile.getFileOriginalName();
         productConverted.setImgUrl(imgUrl);
         productConverted.setFileName(fileName);
+        productConverted.setCategory(category);
         if(productReqDto.highlight() == null)
             productConverted.setHighlight(false);
         return repository.save(productConverted).getId();
@@ -53,6 +56,12 @@ public class ProductService {
 
     public Page<ProductResDto> all(Pageable pageable){
         var products = repository.findAll(pageable);
+        return products.map(mapper::entityToProductResDto);
+    }
+
+    public Page<ProductResDto> findByCategory(Long idCategory, Pageable pageable){
+        Category category = categoryService.findById(idCategory);
+        var products = repository.findByCategory(category.getId(), pageable);
         return products.map(mapper::entityToProductResDto);
     }
 
