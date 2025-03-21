@@ -65,4 +65,8 @@ public class ProductService {
         return products.map(mapper::entityToProductResDto);
     }
 
+    public Product findById(Long id){
+        return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Produto não encontrado."));
+    }
+
 }

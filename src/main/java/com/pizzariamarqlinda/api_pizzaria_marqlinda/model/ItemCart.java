@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -30,7 +31,11 @@ public class ItemCart {
     @JoinColumn(name = "CART_ID")
     private Cart cart;
 
-    private BigDecimal getSubtotal(){
+    public BigDecimal getSubtotal(){
         return product.getPrice().multiply(new BigDecimal(quantity));
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = Objects.requireNonNullElse(quantity, 1);
     }
 }

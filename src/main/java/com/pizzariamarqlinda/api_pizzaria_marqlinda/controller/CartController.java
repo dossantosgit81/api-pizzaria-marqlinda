@@ -1,0 +1,24 @@
+package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
+
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ItemCartReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.CartService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+@RequestMapping("/api/carts")
+@RestController
+@RequiredArgsConstructor
+public class CartController {
+
+    private final CartService service;
+
+    @PostMapping(value = "/products/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> create(@RequestBody ItemCartReqDto itemCartReqDto, @PathVariable("idProduct") Long idProduct, JwtAuthenticationToken token, UriComponentsBuilder uriBuilder){
+        service.add(token, itemCartReqDto, idProduct);
+        return ResponseEntity.ok().body(null);
+    }
+}
