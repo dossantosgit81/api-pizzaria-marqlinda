@@ -75,4 +75,12 @@ public class ProductController {
         var res = service.all(PageRequest.of(pageNumber, pageSize, sort));
         return ResponseEntity.ok(new PageResponseDto<>(res));
     }
+
+    @GetMapping(value = "/categories/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PageResponseDto<ProductResDto>> allByCategory(@PathVariable("id")Long id,
+                                                                        @RequestParam int pageNumber,
+                                                              @RequestParam int pageSize){
+        var res = service.findByCategory(id, PageRequest.of(pageNumber, pageSize));
+        return ResponseEntity.ok(new PageResponseDto<>(res));
+    }
 }
