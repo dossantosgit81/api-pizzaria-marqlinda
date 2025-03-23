@@ -5,7 +5,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.ValidatorLoggedUserService;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.LoggedUserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,10 +23,10 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class ValidatorLoggedUserServiceTest {
+public class LoggedUserServiceTest {
 
     @InjectMocks
-    private ValidatorLoggedUserService validatorLoggedUser;
+    private LoggedUserService validatorLoggedUser;
 
     @Mock
     private UserRepository repository;

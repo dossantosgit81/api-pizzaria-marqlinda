@@ -6,7 +6,6 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.UserMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Cart;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum;
@@ -21,10 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +30,7 @@ public class UserService {
     private static final String NON_EXISTENT_USER = "Usuário inexistente.";
     private static final String EXISTS_EMAIL = "Já existe um usuário com esse email.";
 
-    private final ValidatorLoggedUserService validatorLoggedUser;
+    private final LoggedUserService loggedUser;
     private final UserMapper mapper = UserMapper.INSTANCE;
 
     private final UserRepository repository;
@@ -82,12 +79,12 @@ public class UserService {
 
     public UserResDto findById(Long id, JwtAuthenticationToken token) {
         Optional<User> userReqSearched = repository.findById(id);
-        var loggedUser = validatorLoggedUser.loggedUser(token);
+        var loggedUser = this.loggedUser.loggedUser(token);
                                                                     /*Se um usuário comum estiver tentando acessar
                                                                     um recurso que não é dele, a gente já recusa de cara por que
                                                                     por definição ele não pode fazer este tipo de operação.
                                                                     --Validação de segurança aqui*/
-        if(validatorLoggedUser.isUserHasRoleAdmin(loggedUser) || (userReqSearched.isPresent() && validatorLoggedUser.userIsOwnerResource(loggedUser, userReqSearched.get())))
+        if(this.loggedUser.isUserHasRoleAdmin(loggedUser) || (userReqSearched.isPresent() && this.loggedUser.userIsOwnerResource(loggedUser, userReqSearched.get())))
             if(userReqSearched.isPresent())
                 return mapper.entityToUserResDto(userReqSearched.get());
             else

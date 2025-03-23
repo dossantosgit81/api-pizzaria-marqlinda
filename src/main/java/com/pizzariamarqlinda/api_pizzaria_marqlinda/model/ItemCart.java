@@ -12,7 +12,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@Table(name = "ITEMS_CART")
+@Table(name = "ITEMS_PRODUCTS")
 public class ItemCart {
 
     @Id

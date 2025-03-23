@@ -10,7 +10,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.ProfilesUserEnum
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.UserRepository;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.RoleService;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.ValidatorLoggedUserService;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.LoggedUserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,13 +19,10 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -57,7 +54,7 @@ public class UserServiceTest {
     private RoleService roleService;
 
     @Mock
-    private ValidatorLoggedUserService validatorLoggedUser;
+    private LoggedUserService validatorLoggedUser;
 
     UserReqDto newUserSuccess;
     User savedUser;

@@ -1,4 +1,4 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto;
 
-public record CartDto(Long id) {
+public record CartReqDto(Long id) {
 }
