@@ -18,8 +18,8 @@ public class CartController {
     private final CartService service;
 
     @PostMapping(value = "/products/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CartResDto> create(@RequestBody ItemCartReqDto itemCartReqDto, @PathVariable("idProduct") Long idProduct, JwtAuthenticationToken token, UriComponentsBuilder uriBuilder){
-        var res= service.add(token, itemCartReqDto, idProduct);
+    public ResponseEntity<CartResDto> create(@RequestBody ItemCartReqDto itemCartReqDto, @PathVariable("id") Long id, JwtAuthenticationToken token){
+        var res= service.add(token, itemCartReqDto, id);
         return ResponseEntity.ok().body(res);
     }
 }

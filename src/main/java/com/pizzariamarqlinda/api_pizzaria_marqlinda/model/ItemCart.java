@@ -13,6 +13,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Table(name = "ITEMS_PRODUCTS")
+@Builder
 public class ItemCart {
 
     @Id
