@@ -50,7 +50,7 @@ public class CartService {
         throw new ObjectNotFoundException("Item não encontrado. "+idItemCart);
     }
 
-    public Integer getQuantityItemsCart(JwtAuthenticationToken token){
+    public int getQuantityItemsCart(JwtAuthenticationToken token){
         User user = loggedUserService.loggedUser(token);
         return Optional
                 .ofNullable(user.getCart())
