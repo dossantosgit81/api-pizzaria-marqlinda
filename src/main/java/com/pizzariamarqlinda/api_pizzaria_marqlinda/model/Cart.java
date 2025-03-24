@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -19,4 +20,11 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart")
     private List<ItemCart> items;
+
+    @Transient
+    private BigDecimal total;
+
+    public BigDecimal getTotal() {
+        return items.stream().map(ItemCart::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }
