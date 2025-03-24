@@ -24,7 +24,7 @@ public class ItemCart {
 
     private BigDecimal subtotal;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "PRODUCT_ID")
     private Product product;
 

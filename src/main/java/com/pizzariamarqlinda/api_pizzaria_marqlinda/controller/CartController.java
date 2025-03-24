@@ -21,4 +21,10 @@ public class CartController {
         var res= service.add(token, itemCartReqDto, id);
         return ResponseEntity.ok().body(res);
     }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<CartResDto> delete (@PathVariable Long id, JwtAuthenticationToken token){
+        var res = service.deleteItemCart(token, id);
+        return ResponseEntity.ok().body(res);
+    }
 }
