@@ -4,8 +4,6 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.TestConfigs;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.integrationtests.AbstractIntegrationTest;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.util.MockUser;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +18,7 @@ import static io.restassured.RestAssured.port;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class CartIntegrationTest extends AbstractIntegrationTest {
+public class CartIntegrationDeleteTest extends AbstractIntegrationTest {
 
     @BeforeEach
     public void setUp(){
@@ -63,13 +61,29 @@ public class CartIntegrationTest extends AbstractIntegrationTest {
         .when()
                 .post("/api/products");
 
-        //Test add item in cart with success
+        //Add item 1
+       given()
+                .contentType(ContentType.JSON)
+                .body(Map.of("quantity", "5"))
+                .header("Authorization", "Bearer "+token)
+        .when()
+                .post("/api/carts/products/1");
+
+        //Add item 2
+       given()
+                .contentType(ContentType.JSON)
+                .body(Map.of("quantity", "5"))
+                .header("Authorization", "Bearer "+token)
+        .when()
+                .post("/api/carts/products/1");
+
+       //Delete item 1
        Float total = given()
                 .contentType(ContentType.JSON)
                 .body(Map.of("quantity", "5"))
                 .header("Authorization", "Bearer "+token)
         .when()
-                .post("/api/carts/products/1")
+                .delete("/api/carts/products/1")
         .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
