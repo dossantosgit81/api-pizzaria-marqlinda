@@ -10,4 +10,5 @@ public interface ItemCartRepository extends JpaRepository<ItemCart, Long> {
 
     @Query("SELECT ic FROM ItemCart ic WHERE ic.cart.id = ?1 ")
     List<ItemCart> findAllByCartId(Long id);
+
 }

@@ -27,4 +27,9 @@ public class CartController {
         var res = service.deleteItemCart(token, id);
         return ResponseEntity.ok().body(res);
     }
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getCountItems(JwtAuthenticationToken token){
+        return ResponseEntity.ok(service.getQuantityItemsCart(token));
+    }
 }
