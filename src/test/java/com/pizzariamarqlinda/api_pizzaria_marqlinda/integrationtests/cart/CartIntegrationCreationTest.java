@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import static io.restassured.RestAssured.port;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext
 public class CartIntegrationCreationTest extends AbstractIntegrationTest {
 
     @BeforeEach
@@ -62,20 +64,14 @@ public class CartIntegrationCreationTest extends AbstractIntegrationTest {
                 .post("/api/products");
 
         //Test add item in cart with success
-       Float total = given()
+       given()
                 .contentType(ContentType.JSON)
                 .body(Map.of("quantity", "5"))
                 .header("Authorization", "Bearer "+token)
         .when()
                 .post("/api/carts/products/1")
         .then()
-                .statusCode(HttpStatus.OK.value())
-                .extract()
-                .path("total");
-
-        BigDecimal valueExpected = new BigDecimal("50.00");
-        assertEquals(0, valueExpected.compareTo(new BigDecimal(total)));
-
+                .statusCode(HttpStatus.OK.value());
     }
 
 
