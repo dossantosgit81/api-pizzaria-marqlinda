@@ -1,7 +1,7 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Set;
 
-public record CartResDto(BigDecimal total, List<ItemCartResDto> items) {
+public record CartResDto(BigDecimal total, Set<ItemCartResDto> items) {
 }

@@ -8,12 +8,15 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Product;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CartResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ItemCartReqDto;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -23,27 +26,26 @@ public class CartService {
     private final ProductService productService;
     private final LoggedUserService loggedUserService;
     private final ItemCartService itemCartService;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Transactional
     public CartResDto add(JwtAuthenticationToken token, ItemCartReqDto itemCartReqDto, Long idProduct){
         User loggedUser = loggedUserService.loggedUser(token);
         Product product = productService.findById(idProduct);
-        ItemCart itemCart = new ItemCart();
-        itemCart.setProduct(product);
-        itemCart.setQuantity(itemCartReqDto.quantity());
-        itemCart.setCart(loggedUser.getCart());
-        itemCartService.save(itemCart);
-        Cart cart = loggedUserService.loggedUser(token).getCart();
-        return mapper.entityToCartResDto(cart);
+        ItemCart itemCart = itemCartService.save(loggedUser, idProduct, itemCartReqDto, product);
+        entityManager.flush();
+        entityManager.refresh(loggedUser);
+        return mapper.entityToCartResDto(itemCart.getCart());
     }
 
     @Transactional
     public CartResDto deleteItemCart(JwtAuthenticationToken token, Long idItemCart){
         User user = loggedUserService.loggedUser(token);
-        Optional<ItemCart> itemCart = user.getCart().getItems().stream().filter(item -> item.getId().equals(idItemCart)).findFirst();
+        Set<ItemCart> items = user.getCart().getItems();
+        Optional<ItemCart> itemCart = items.stream().filter(item -> item.getId().equals(idItemCart)).findFirst();
         if(itemCart.isPresent()){
-            itemCartService.delete(itemCart.get());
-            user.getCart().setItems(itemCartService.all(user.getCart()));
+            items.remove(itemCart.get());
             return mapper.entityToCartResDto(user.getCart());
         }
         throw new ObjectNotFoundException("Item não encontrado. "+idItemCart);

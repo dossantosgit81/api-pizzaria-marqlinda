@@ -61,6 +61,19 @@ public class CartIntegrationDeleteTest extends AbstractIntegrationTest {
         .when()
                 .post("/api/products");
 
+        given()
+                .header("Authorization", "Bearer "+token)
+                .param("idCategory", "1")
+                .multiPart("description", "Lemon soda")
+                .multiPart("details", "Lemon soda")
+                .multiPart("price", "10.00")
+                .multiPart("available", true)
+                .multiPart("highlight", false)
+                .multiPart("file", new File("./src/test/resources/storage/test-controller.jpg"))
+                .contentType("multipart/form-data")
+                .when()
+                .post("/api/products");
+
         //Add item 1
        given()
                 .contentType(ContentType.JSON)
@@ -75,12 +88,11 @@ public class CartIntegrationDeleteTest extends AbstractIntegrationTest {
                 .body(Map.of("quantity", "5"))
                 .header("Authorization", "Bearer "+token)
         .when()
-                .post("/api/carts/products/1");
+                .post("/api/carts/products/2");
 
        //Delete item 1
        Float total = given()
                 .contentType(ContentType.JSON)
-                .body(Map.of("quantity", "5"))
                 .header("Authorization", "Bearer "+token)
         .when()
                 .delete("/api/carts/products/1")

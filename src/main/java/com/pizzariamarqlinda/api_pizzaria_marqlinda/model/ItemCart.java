@@ -11,7 +11,7 @@ import java.util.Objects;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 @Table(name = "ITEMS_PRODUCTS")
 @Builder
 public class ItemCart {
@@ -34,6 +34,10 @@ public class ItemCart {
 
     public BigDecimal getSubtotal(){
         return product.getPrice().multiply(new BigDecimal(quantity));
+    }
+
+    public void setSubtotal() {
+        this.subtotal = getSubtotal();
     }
 
     public void setQuantity(Integer quantity) {
