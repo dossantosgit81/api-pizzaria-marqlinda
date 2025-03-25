@@ -18,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AddressService {
 
+    public static final String ADDRESS_IS_NOT_FOUND = "Endereço não foi encontrado.";
     private final AddressMapper mapper = AddressMapper.INSTANCE;
     private final AddressRepository repository;
     private final LoggedUserService loggedUserService;
@@ -33,7 +34,7 @@ public class AddressService {
         User user = loggedUserService.loggedUser(token);
         Optional<Address> addressSearched = repository.findByUser(idAddress, user.getId());
         if(addressSearched.isEmpty())
-            throw new ObjectNotFoundException("Endereço não foi encontrado.");
+            throw new ObjectNotFoundException(ADDRESS_IS_NOT_FOUND);
         Address entity = mapper.reqDtoToEntity(addressReqDto);
         return mapper.entityToAddressResDto(repository.save(entity));
     }
@@ -50,6 +51,6 @@ public class AddressService {
                 .filter(address -> address.getId().equals(idAddress))
                 .findFirst();
         addressSearched.ifPresent(addresses::remove);
-        throw new ObjectNotFoundException("Endereço não foi encontrado.");
+        throw new ObjectNotFoundException(ADDRESS_IS_NOT_FOUND);
     }
 }
