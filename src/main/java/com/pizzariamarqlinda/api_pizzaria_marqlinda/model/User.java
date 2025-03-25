@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,6 +46,9 @@ public class User implements Serializable {
            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Address> addresses;
 
     public boolean isValidUser(LoginReqDto loginReqDto, PasswordEncoder passwordEncoder){
         return passwordEncoder.matches(loginReqDto.password(), this.password);
