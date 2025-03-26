@@ -36,7 +36,6 @@ public class AddressService {
         if(addressSearched.isEmpty())
             throw new ObjectNotFoundException(ADDRESS_IS_NOT_FOUND);
         Address entity = mapper.addressReqDtoToEntity(addressReqDto);
- //       entity.setNeighborhood(addressReqDto.neighborhood());
         return mapper.entityToAddressResDto(repository.save(entity));
     }
 
