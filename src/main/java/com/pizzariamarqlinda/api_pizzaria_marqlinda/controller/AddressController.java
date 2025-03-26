@@ -1,12 +1,11 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.AddressReqDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.AddressResDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CategoryReqDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.*;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.AddressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RequestMapping("/api/addresses")
 @RestController
@@ -36,14 +36,17 @@ public class AddressController {
         return ResponseEntity.ok(res);
     }
 
-//    @DeleteMapping("/products/{id}")
-//    public ResponseEntity<CartResDto> delete (@PathVariable Long id, JwtAuthenticationToken token){
-//        var res = service.deleteItemCart(token, id);
-//        return ResponseEntity.ok().body(res);
-//    }
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AddressResDto>> findAll(JwtAuthenticationToken token){
+        var res = service.all(token);
+        return ResponseEntity.ok().body(res);
+    }
 
-//    @GetMapping("/count")
-//    public ResponseEntity<Integer> getCountItems(JwtAuthenticationToken token){
-//        return ResponseEntity.ok(service.getQuantityItemsCart(token));
-//    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete (@PathVariable("id") Long id, JwtAuthenticationToken token){
+        service.delete(token, id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

@@ -41,7 +41,7 @@ public class AddressService {
 
     public List<AddressResDto> all(JwtAuthenticationToken token){
         User user = loggedUserService.loggedUser(token);
-        return user.getAddresses().stream().map(mapper::entityToAddressResDto).toList();
+        return repository.findALl(user.getId()).stream().map(mapper::entityToAddressResDto).toList();
     }
 
     public void delete(JwtAuthenticationToken token, Long idAddress){
@@ -50,7 +50,8 @@ public class AddressService {
         Optional<Address> addressSearched = addresses.stream()
                 .filter(address -> address.getId().equals(idAddress))
                 .findFirst();
-        addressSearched.ifPresent(addresses::remove);
-        throw new ObjectNotFoundException(ADDRESS_IS_NOT_FOUND);
+        if(addressSearched.isEmpty())
+            throw new ObjectNotFoundException(ADDRESS_IS_NOT_FOUND);
+        addresses.remove(addressSearched.get());
     }
 }
