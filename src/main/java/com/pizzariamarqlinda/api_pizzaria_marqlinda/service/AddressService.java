@@ -7,6 +7,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.AddressReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.AddressResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.AddressRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -44,14 +45,15 @@ public class AddressService {
         return repository.findALl(user.getId()).stream().map(mapper::entityToAddressResDto).toList();
     }
 
+    @Transactional
     public void delete(JwtAuthenticationToken token, Long idAddress){
         User user = loggedUserService.loggedUser(token);
         List<Address> addresses = user.getAddresses();
-        Optional<Address> addressSearched = addresses.stream()
-                .filter(address -> address.getId().equals(idAddress))
-                .findFirst();
-        if(addressSearched.isEmpty())
+        Optional<Address> addressSearched = addresses.stream().filter(address -> address.getId().equals(idAddress)).findFirst();
+        if(addressSearched.isPresent())
+            addresses.remove(addressSearched.get());
+        else
             throw new ObjectNotFoundException(ADDRESS_IS_NOT_FOUND);
-        addresses.remove(addressSearched.get());
+
     }
 }
