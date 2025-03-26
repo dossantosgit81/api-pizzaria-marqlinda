@@ -25,7 +25,7 @@ public class AddressService {
 
     public Long save(AddressReqDto addressReqDto, JwtAuthenticationToken token){
         User user = loggedUserService.loggedUser(token);
-        Address addressConverted = mapper.reqDtoToEntity(addressReqDto);
+        Address addressConverted = mapper.addressReqDtoToEntity(addressReqDto);
         addressConverted.setUser(user);
         return repository.save(addressConverted).getId();
     }
@@ -35,7 +35,8 @@ public class AddressService {
         Optional<Address> addressSearched = repository.findByUser(idAddress, user.getId());
         if(addressSearched.isEmpty())
             throw new ObjectNotFoundException(ADDRESS_IS_NOT_FOUND);
-        Address entity = mapper.reqDtoToEntity(addressReqDto);
+        Address entity = mapper.addressReqDtoToEntity(addressReqDto);
+ //       entity.setNeighborhood(addressReqDto.neighborhood());
         return mapper.entityToAddressResDto(repository.save(entity));
     }
 

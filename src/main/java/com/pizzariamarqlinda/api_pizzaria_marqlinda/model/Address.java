@@ -20,8 +20,9 @@ public class Address {
     private String street;
     private Integer number;
     private String zipcode;
-    private String neghborhood;
+    private String neighborhood;
     private String title;
     @ManyToOne
+    @JoinColumn(name = "USER_ID")
     private User user;
 }
