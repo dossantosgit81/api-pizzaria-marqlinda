@@ -5,7 +5,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Cart;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.ItemProduct;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Product;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ItemCartReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ItemProductReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.ItemProductRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class ItemProductService {
     private final ItemProductRepository repository;
 
     @Transactional
-    public ItemProduct save(User user, Long idProduct, ItemCartReqDto itemCartReqDto, Product product){
+    public ItemProduct save(User user, Long idProduct, ItemProductReqDto itemCartReqDto, Product product){
         Optional<ItemProduct> itemCart = user.getCart().getItems().stream().filter(item -> item.getProduct().getId().equals(idProduct)).findFirst();
         if(itemCart.isPresent()){
             ItemProduct itemUpdated = itemCart.get();

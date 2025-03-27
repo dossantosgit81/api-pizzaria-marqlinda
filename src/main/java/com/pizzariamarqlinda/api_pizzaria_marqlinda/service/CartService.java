@@ -6,7 +6,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.ItemProduct;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Product;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CartResDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ItemCartReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ItemProductReqDto;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -29,7 +29,7 @@ public class CartService {
     private EntityManager entityManager;
 
     @Transactional
-    public CartResDto add(JwtAuthenticationToken token, ItemCartReqDto itemCartReqDto, Long idProduct){
+    public CartResDto add(JwtAuthenticationToken token, ItemProductReqDto itemCartReqDto, Long idProduct){
         User loggedUser = loggedUserService.loggedUser(token);
         Product product = productService.findById(idProduct);
         ItemProduct itemCart = itemCartService.save(loggedUser, idProduct, itemCartReqDto, product);
