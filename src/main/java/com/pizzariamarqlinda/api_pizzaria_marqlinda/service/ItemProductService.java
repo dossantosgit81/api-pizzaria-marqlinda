@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ItemCartService {
+public class ItemProductService {
 
     private final ItemProductRepository repository;
 

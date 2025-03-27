@@ -24,7 +24,7 @@ public class CartService {
     private final CartMapper mapper = CartMapper.INSTANCE;
     private final ProductService productService;
     private final LoggedUserService loggedUserService;
-    private final ItemCartService itemCartService;
+    private final ItemProductService itemCartService;
     @PersistenceContext
     private EntityManager entityManager;
 
