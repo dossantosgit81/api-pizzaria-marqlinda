@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,12 +19,12 @@ public class Cart {
     private Long id;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ItemCart> items;
+    private Set<ItemProduct> items;
 
     @Transient
     private BigDecimal total;
 
     public BigDecimal getTotal() {
-        return items.stream().map(ItemCart::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return items.stream().map(ItemProduct::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

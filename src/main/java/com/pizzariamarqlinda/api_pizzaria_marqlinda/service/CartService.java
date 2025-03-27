@@ -2,8 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.CartMapper;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Cart;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.ItemCart;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.ItemProduct;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Product;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CartResDto;
@@ -33,7 +32,7 @@ public class CartService {
     public CartResDto add(JwtAuthenticationToken token, ItemCartReqDto itemCartReqDto, Long idProduct){
         User loggedUser = loggedUserService.loggedUser(token);
         Product product = productService.findById(idProduct);
-        ItemCart itemCart = itemCartService.save(loggedUser, idProduct, itemCartReqDto, product);
+        ItemProduct itemCart = itemCartService.save(loggedUser, idProduct, itemCartReqDto, product);
         entityManager.flush();
         entityManager.refresh(loggedUser);
         return mapper.entityToCartResDto(itemCart.getCart());
@@ -42,8 +41,8 @@ public class CartService {
     @Transactional
     public CartResDto deleteItemCart(JwtAuthenticationToken token, Long idItemCart){
         User user = loggedUserService.loggedUser(token);
-        Set<ItemCart> items = user.getCart().getItems();
-        Optional<ItemCart> itemCart = items.stream().filter(item -> item.getId().equals(idItemCart)).findFirst();
+        Set<ItemProduct> items = user.getCart().getItems();
+        Optional<ItemProduct> itemCart = items.stream().filter(item -> item.getId().equals(idItemCart)).findFirst();
         if(itemCart.isPresent()){
             items.remove(itemCart.get());
             return mapper.entityToCartResDto(user.getCart());

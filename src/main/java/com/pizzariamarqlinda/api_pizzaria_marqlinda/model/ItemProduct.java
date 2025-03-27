@@ -14,7 +14,7 @@ import java.util.Objects;
 @EqualsAndHashCode(of = "id")
 @Table(name = "ITEMS_PRODUCTS")
 @Builder
-public class ItemCart {
+public class ItemProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +31,10 @@ public class ItemCart {
     @ManyToOne
     @JoinColumn(name = "CART_ID")
     private Cart cart;
+
+    @ManyToOne
+    @JoinColumn(name = "ORDER_ID")
+    private Order order;
 
     public BigDecimal getSubtotal(){
         return product.getPrice().multiply(new BigDecimal(quantity));
