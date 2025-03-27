@@ -1,1 +1,0 @@
-ALTER TABLE items_products ALTER COLUMN subtotal DROP NOT NULL
