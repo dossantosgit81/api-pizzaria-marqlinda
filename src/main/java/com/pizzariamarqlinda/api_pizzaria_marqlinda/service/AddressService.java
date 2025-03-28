@@ -45,6 +45,10 @@ public class AddressService {
         return repository.findALl(user.getId()).stream().map(mapper::entityToAddressResDto).toList();
     }
 
+    public Address findById(Long id){
+        return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(ADDRESS_IS_NOT_FOUND));
+    }
+
     @Transactional
     public void delete(JwtAuthenticationToken token, Long idAddress){
         User user = loggedUserService.loggedUser(token);

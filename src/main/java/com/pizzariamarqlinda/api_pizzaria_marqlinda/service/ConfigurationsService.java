@@ -5,6 +5,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.ConfigurationsRep
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,6 +36,18 @@ public class ConfigurationsService {
 
     public Integer getClosingMinute(){
         return Integer.parseInt(loadConfigurations().get("CLOSING_TIME").get(1));
+    }
+
+    public BigDecimal getRateDelivery(){
+        return new BigDecimal(loadConfigurations().get("RATE_DELIVERY").getFirst());
+    }
+
+    public Integer getDeliveryForecast(){
+        return Integer.parseInt(loadConfigurations().get("DELIVERY_FORECAST_MINUTE").getFirst());
+    }
+
+    public List<String> getDaysOfWeek(){
+        return loadConfigurations().get("OPENING_DAYS");
     }
 
 

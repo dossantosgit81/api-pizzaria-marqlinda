@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public class CartService {
     @Transactional
     public CartResDto deleteItemCart(JwtAuthenticationToken token, Long idItemCart){
         User user = loggedUserService.loggedUser(token);
-        Set<ItemProduct> items = user.getCart().getItems();
+        List<ItemProduct> items = user.getCart().getItems();
         Optional<ItemProduct> itemCart = items.stream().filter(item -> item.getId().equals(idItemCart)).findFirst();
         if(itemCart.isPresent()){
             items.remove(itemCart.get());

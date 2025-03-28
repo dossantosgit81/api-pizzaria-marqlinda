@@ -29,6 +29,10 @@ public class PaymentMethodService {
                 .collect(Collectors.toList());
     }
 
+    public PaymentMethod findById(Long id){
+        return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Método de pagamento não encontrado."));
+    }
+
     public void delete(Long id){
         PaymentMethod paymentMethod = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Methodo de pagamento não encontrado"));
         repository.delete(paymentMethod);

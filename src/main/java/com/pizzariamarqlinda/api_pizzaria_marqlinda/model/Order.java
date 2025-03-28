@@ -25,8 +25,8 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
-    @Column(name = "DATE_TIME")
-    private LocalDateTime dateTime;
+    @Column(name = "DATE_TIME_ORDER")
+    private LocalDateTime dateTimeOrder;
 
     private BigDecimal total;
 
