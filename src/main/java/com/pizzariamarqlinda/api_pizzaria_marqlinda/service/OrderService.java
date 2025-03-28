@@ -2,12 +2,10 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.BusinessLogicException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.OrderMapper;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Address;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Order;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.PaymentMethod;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.User;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.*;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.StatusEnum;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -34,6 +32,7 @@ public class OrderService {
     private final AddressService addressService;
     private final PaymentMethodService paymentMethodService;
     private final ConfigurationsService configuration;
+    private final OrderRepository orderRepository;
 
     @Transactional
     public Long save(OrderReqDto orderReqDto){
@@ -42,16 +41,19 @@ public class OrderService {
         this.verifyQuantityItemsInCart(loggedUser);
         this.checkOfficeHours();
         this.checkBusinessDay();
-        Order savedOrder = saveOrder(orderReqDto, orderConverted, loggedUser);
-        //TODO anular items do carrinho
-        return savedOrder.getId();
+        Order objOrder = this.fillObjectOrder(orderReqDto, orderConverted, loggedUser);
+        return orderRepository.save(objOrder).getId();
     }
 
-    public Order saveOrder(OrderReqDto orderReqDto, Order orderConverted, User loggedUser){
+    public Order fillObjectOrder(OrderReqDto orderReqDto, Order orderConverted, User loggedUser){
         Order order = this.orderWithTotal(orderReqDto, orderConverted, loggedUser);
         order.setStatus(StatusEnum.ORDER_IN_PROGRESS);
         order.setDateTimeOrder(LocalDateTime.now());
         order.setDeliveryForecast(order.getDateTimeOrder().plusMinutes(configuration.getDeliveryForecast()));
+        for (ItemProduct itemProduct : loggedUser.getCart().getItems()) {
+            itemProduct.setCart(null);
+            itemProduct.setOrder(order);
+        }
         order.setItems(loggedUser.getCart().getItems());
         order.setUser(loggedUser);
         PaymentMethod paymentMethod = paymentMethodService.findById(orderReqDto.paymentMethod().id());
