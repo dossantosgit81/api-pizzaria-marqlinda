@@ -42,9 +42,8 @@ public class ProductController {
             var errors = violations.stream().map(ConstraintViolation::getMessage).toList();
             return ResponseEntity.unprocessableEntity().body(errors);
         }
-        Long idProduct = service.save(product, idCategory, file);
-        URI uri = uriBuilder.path("/api/products/{id}").buildAndExpand(idProduct).toUri();
-        return ResponseEntity.created(uri).build();
+        service.save(product, idCategory, file);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("{id}/image")

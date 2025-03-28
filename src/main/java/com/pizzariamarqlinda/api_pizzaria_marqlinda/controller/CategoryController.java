@@ -28,9 +28,8 @@ public class CategoryController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
     public ResponseEntity<Void> create(@Valid @RequestBody CategoryReqDto categoryReqDto, UriComponentsBuilder uriBuilder){
-        Long idCategory = service.save(categoryReqDto);
-        URI uri = uriBuilder.path("/api/categories/{id}").buildAndExpand(idCategory).toUri();
-        return ResponseEntity.created(uri).body(null);
+        service.save(categoryReqDto);
+        return ResponseEntity.ok().body(null);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,7 +40,7 @@ public class CategoryController {
 
     @PutMapping(value = "{id}",produces = {MediaType.APPLICATION_JSON_VALUE})
     @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
-    public ResponseEntity<UserResDto> findById( @Valid @RequestBody CategoryReqDto categoryReqDto, @PathVariable Long id){
+    public ResponseEntity<UserResDto> update( @Valid @RequestBody CategoryReqDto categoryReqDto, @PathVariable Long id){
         service.update(id, categoryReqDto);
         return ResponseEntity.noContent().build();
     }

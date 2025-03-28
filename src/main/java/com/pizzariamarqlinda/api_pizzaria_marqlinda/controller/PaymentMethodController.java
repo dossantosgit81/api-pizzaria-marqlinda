@@ -27,9 +27,8 @@ public class PaymentMethodController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
     public ResponseEntity<Void> create(@Valid @RequestBody PaymentMethodDto paymentMethodDto, JwtAuthenticationToken token, UriComponentsBuilder uriBuilder){
-        var idPaymentMethod= service.save(paymentMethodDto);
-        URI uri = uriBuilder.path("/api/payments/{id}").buildAndExpand(idPaymentMethod).toUri();
-        return ResponseEntity.created(uri).body(null);
+        service.save(paymentMethodDto);
+        return ResponseEntity.ok().body(null);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

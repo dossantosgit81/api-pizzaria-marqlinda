@@ -43,6 +43,7 @@ public class OrderService {
         this.checkOfficeHours();
         this.checkBusinessDay();
         Order savedOrder = saveOrder(orderReqDto, orderConverted, loggedUser);
+        //TODO anular items do carrinho
         return savedOrder.getId();
     }
 

@@ -25,9 +25,8 @@ public class AddressController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> create(@Valid @RequestBody AddressReqDto addressReqDto, JwtAuthenticationToken token, UriComponentsBuilder uriBuilder){
-        var idAddress= service.save(addressReqDto, token);
-        URI uri = uriBuilder.path("/api/addresses/{id}").buildAndExpand(idAddress).toUri();
-        return ResponseEntity.created(uri).body(null);
+        service.save(addressReqDto, token);
+        return ResponseEntity.ok(null);
     }
 
     @PutMapping(value = "{id}",produces = {MediaType.APPLICATION_JSON_VALUE})
