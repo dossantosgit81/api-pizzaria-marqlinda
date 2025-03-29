@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import static io.restassured.RestAssured.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@DirtiesContext
 public class UserIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach

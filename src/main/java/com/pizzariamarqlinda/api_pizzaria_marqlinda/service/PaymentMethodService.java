@@ -5,6 +5,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.PaymentMethodMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.PaymentMethod;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.PaymentMethodDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.PaymentMethodRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

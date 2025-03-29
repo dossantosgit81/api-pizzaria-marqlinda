@@ -71,4 +71,10 @@ public class GlobalExceptionHandler {
         return ErrorResponseDto.responseNotFound(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
     }
 
+    @ExceptionHandler(BusinessLogicException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseDto businessLogicException(InvalidFormatImageException ex){
+        return ErrorResponseDto.responseNotFound(HttpStatus.CONFLICT.value(), ex.getMessage());
+    }
+
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -55,4 +56,8 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<ItemProduct> items;
 
+    public BigDecimal getTotal() {
+        total = total.setScale(2, RoundingMode.HALF_UP);
+        return total;
+    }
 }

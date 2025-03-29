@@ -4,13 +4,14 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.BusinessLogicExcep
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.OrderMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.*;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderReqDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.StatusEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.OrderRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -18,6 +19,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 @Service
@@ -33,28 +36,31 @@ public class OrderService {
     private final PaymentMethodService paymentMethodService;
     private final ConfigurationsService configuration;
     private final OrderRepository orderRepository;
+    private final ItemProductService itemProductService;
 
     @Transactional
-    public Long save(OrderReqDto orderReqDto){
+    public OrderResDto save(OrderReqDto orderReqDto){
         Order orderConverted = mapper.orderReqDtoToEntity(orderReqDto);
         User loggedUser = loggedUserService.loggedUser(token);
         this.verifyQuantityItemsInCart(loggedUser);
         this.checkOfficeHours();
         this.checkBusinessDay();
         Order objOrder = this.fillObjectOrder(orderReqDto, orderConverted, loggedUser);
-        return orderRepository.save(objOrder).getId();
+        return mapper.entityToOrderResDto(orderRepository.save(objOrder));
     }
 
-    public Order fillObjectOrder(OrderReqDto orderReqDto, Order orderConverted, User loggedUser){
+    private Order fillObjectOrder(OrderReqDto orderReqDto, Order orderConverted, User loggedUser){
         Order order = this.orderWithTotal(orderReqDto, orderConverted, loggedUser);
         order.setStatus(StatusEnum.ORDER_IN_PROGRESS);
         order.setDateTimeOrder(LocalDateTime.now());
         order.setDeliveryForecast(order.getDateTimeOrder().plusMinutes(configuration.getDeliveryForecast()));
-        for (ItemProduct itemProduct : loggedUser.getCart().getItems()) {
+        List<ItemProduct> items = new ArrayList<>(loggedUser.getCart().getItems());
+        for (ItemProduct itemProduct : items) {
             itemProduct.setCart(null);
             itemProduct.setOrder(order);
         }
-        order.setItems(loggedUser.getCart().getItems());
+        order.setItems(items);
+        itemProductService.deleteAll(loggedUser.getCart().getItems());
         order.setUser(loggedUser);
         PaymentMethod paymentMethod = paymentMethodService.findById(orderReqDto.paymentMethod().id());
         order.setPaymentMethod(paymentMethod);
@@ -63,14 +69,14 @@ public class OrderService {
         return order;
     }
 
-    public Order orderWithTotal(OrderReqDto orderReqDto, Order order, User loggedUser){
+    private Order orderWithTotal(OrderReqDto orderReqDto, Order order, User loggedUser){
         if(orderReqDto.delivery()){
             BigDecimal valueWithRateDelivery = loggedUser.getCart().getTotal().add(configuration.getRateDelivery());
             order.setTotal(valueWithRateDelivery);
             order.setRateDelivery(configuration.getRateDelivery());
         }else {
             order.setTotal(loggedUser.getCart().getTotal());
-            order.setDelivery(null);
+            order.setDelivery(false);
         }
         return order;
     }

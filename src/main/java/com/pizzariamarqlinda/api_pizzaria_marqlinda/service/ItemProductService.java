@@ -46,4 +46,8 @@ public class ItemProductService {
         return repository.findById(idItemCart).orElseThrow(() -> new ObjectNotFoundException("Item não encontrado."));
     }
 
+    public void deleteAll(List<ItemProduct> items){
+        repository.deleteAll(items);
+    }
+
 }
