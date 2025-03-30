@@ -9,15 +9,13 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.StatusEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +27,10 @@ public class OrderService {
 
     @Setter
     private JwtAuthenticationToken token;
+
+    @Setter
+    @Autowired
+    private Clock clock;
 
     private final OrderMapper mapper = OrderMapper.INSTANCE;
     private final LoggedUserService loggedUserService;
@@ -89,15 +91,15 @@ public class OrderService {
     private void checkOfficeHours() {
         LocalTime officeStartTime = LocalTime.of(configuration.getOpeningHour(), configuration.getOpeningMinute());
         LocalTime endOfficeBusinessHours = LocalTime.of(configuration.getClosingHour(), configuration.getClosingMinute());
-        if(LocalTime.now().isBefore(officeStartTime) || LocalTime.now().isAfter(endOfficeBusinessHours))
+        if(LocalTime.now(clock).isBefore(officeStartTime) || LocalTime.now(clock).isAfter(endOfficeBusinessHours))
             throw new BusinessLogicException("Fora do horário de expediente. Atendemos das "+ configuration.getOpeningHour() + "as" + configuration.getClosingHour());
     }
 
     private void checkBusinessDay(){
-        DayOfWeek dayOfWeek = LocalDate.now().getDayOfWeek();
+        DayOfWeek dayOfWeek = LocalDate.now(clock).getDayOfWeek();
         String dayOfWeekInPortuguese = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.of("pt", "BR"));
         if(!configuration.getDaysOfWeek().contains(dayOfWeekInPortuguese)){
-            String sb = "Lamentamos, mas estamos fechados. Estamos fechado. Abrimos: " +
+            String sb = "Lamentamos, mas estamos fechados. Abrimos: " +
                     configuration.getDaysOfWeek().getFirst() +
                     ", " +
                     configuration.getDaysOfWeek().get(1) +
@@ -106,7 +108,9 @@ public class OrderService {
                     ", " +
                     configuration.getDaysOfWeek().get(3) +
                     ", " +
-                    configuration.getDaysOfWeek().get(4);
+                    configuration.getDaysOfWeek().get(4) +
+                    ", " +
+                    configuration.getDaysOfWeek().get(5);
             throw new BusinessLogicException(sb);
         }
     }

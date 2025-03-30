@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessLogicException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponseDto businessLogicException(InvalidFormatImageException ex){
+    public ErrorResponseDto businessLogicException(BusinessLogicException ex){
         return ErrorResponseDto.responseNotFound(HttpStatus.CONFLICT.value(), ex.getMessage());
     }
 
