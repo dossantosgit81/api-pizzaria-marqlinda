@@ -2,46 +2,30 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.integrationtests.order;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.config.TestConfigs;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.BusinessLogicException;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.integrationtests.AbstractIntegrationTest;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.AddressReqIdDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderReqDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.PaymentMethodReqIdDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.ConfigurationsService;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.OrderService;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.util.MockUser;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
-import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.port;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext
-public class OrderIntegrationCreationTest extends AbstractIntegrationTest {
+public class OrderVerifyIntegrationTest {
 
     @Autowired
     private OrderService orderService;
@@ -55,7 +39,9 @@ public class OrderIntegrationCreationTest extends AbstractIntegrationTest {
 
     @Test
     @Order(1)
-    public void shouldRegisterOrderWithSuccessWithRateDeliveryTrue_WhenValidFields() throws JsonProcessingException {
+    public void shouldReturnBusinessLogicException_WhenOutHourOfficeEarlie() throws JsonProcessingException {
+        Clock fixedClock = Clock.fixed(Instant.parse("2025-03-29T07:15:30-03:00"), ZoneId.of("America/Sao_Paulo"));
+        orderService.setClock(fixedClock);
         var user = MockUser.reqUserAdminLogin();
         String token = login(user);
 
@@ -78,26 +64,59 @@ public class OrderIntegrationCreationTest extends AbstractIntegrationTest {
                                 "address": { "id": 1 }
                             }
                             """;
-       Response response = given()
-                .contentType(ContentType.JSON)
-                .body(req)
-                .header("Authorization", "Bearer "+ token)
-        .when()
-                .post("/api/orders")
-        .then()
-                .log().all()
-                .extract()
-                .response();
-
-        Float total = response.body().path("total");
-        BigDecimal valueExpected = new BigDecimal("75.99");
-        BigDecimal totalBigDecimal = new BigDecimal(String.valueOf(total));
-        assertEquals(0, valueExpected.compareTo(totalBigDecimal));
+        try{
+            given()
+                    .contentType(ContentType.JSON)
+                    .body(req)
+                    .header("Authorization", "Bearer "+ token)
+                    .when()
+                    .post("/api/orders")
+                    .then()
+                    .log().all()
+                    .extract()
+                    .response();
+        }catch (Exception ex){
+            Assertions.assertEquals(BusinessLogicException.class, ex.getClass());
+        }
     }
 
     @Test
     @Order(2)
-    public void shouldRegisterOrderWithSuccess_WhenValidFieldsAndDeliveryFalse() throws JsonProcessingException {
+    public void shouldReturnBusinessLogicException_WhenOutHourOfficeLater() throws JsonProcessingException {
+        Clock fixedClock = Clock.fixed(Instant.parse("2025-03-29T18:15:30-03:00"), ZoneId.of("America/Sao_Paulo"));
+        orderService.setClock(fixedClock);
+        var user = MockUser.reqUserAdminLogin();
+        String token = login(user);
+
+        String req = """
+                            {
+                                "observations": "Entregar rápido",
+                                "delivery": true,
+                                "paymentMethod": { "id": 1 },
+                                "address": { "id": 1 }
+                            }
+                            """;
+        try{
+            given()
+                    .contentType(ContentType.JSON)
+                    .body(req)
+                    .header("Authorization", "Bearer "+ token)
+                    .when()
+                    .post("/api/orders")
+                    .then()
+                    .log().all()
+                    .extract()
+                    .response();
+        }catch (Exception ex){
+            Assertions.assertEquals(BusinessLogicException.class, ex.getClass());
+        }
+    }
+
+    @Test
+    @Order(3)
+    public void shouldReturnBusinessLogicException_WhenOutDayOffice() throws JsonProcessingException {
+        Clock fixedClock = Clock.fixed(Instant.parse("2025-03-30T08:15:30-03:00"), ZoneId.of("America/Sao_Paulo"));
+        orderService.setClock(fixedClock);
         var user = MockUser.reqUserAdminLogin();
         String token = login(user);
 
@@ -115,55 +134,13 @@ public class OrderIntegrationCreationTest extends AbstractIntegrationTest {
         String req = """
                             {
                                 "observations": "Entregar rápido",
-                                "delivery": false,
+                                "delivery": true,
                                 "paymentMethod": { "id": 1 },
                                 "address": { "id": 1 }
                             }
                             """;
-        Response response = given()
-                .contentType(ContentType.JSON)
-                .body(req)
-                .header("Authorization", "Bearer "+ token)
-                .when()
-                .post("/api/orders")
-                .then()
-                .log().all()
-                .extract()
-                .response();
-
-        Float total = response.body().path("total");
-        BigDecimal valueExpected = new BigDecimal("70.00");
-        BigDecimal totalBigDecimal = new BigDecimal(String.valueOf(total));
-        assertEquals(0, valueExpected.compareTo(totalBigDecimal));
-    }
-
-
-
-
-    @Test
-    @Order(3)
-    public void shouldBusinessLogicException_WhenNotHasItem() throws JsonProcessingException {
-        var user = MockUser.reqUserAdminLogin();
-        String token = login(user);
-
-        registerCategoryOne(token);
-        registerCategoryTwo(token);
-
-        registerProductOne(token);
-        registerProductTwo(token);
-
-        registerAddress(token);
-
-        String req = """
-                            {
-                                "observations": "Entregar rápido",
-                                "delivery": false,
-                                "paymentMethod": { "id": 1 },
-                                "address": { "id": 1 }
-                            }
-                            """;
-        try {
-             given()
+        try{
+            given()
                     .contentType(ContentType.JSON)
                     .body(req)
                     .header("Authorization", "Bearer "+ token)
@@ -176,8 +153,6 @@ public class OrderIntegrationCreationTest extends AbstractIntegrationTest {
         }catch (Exception ex){
             Assertions.assertEquals(BusinessLogicException.class, ex.getClass());
         }
-
-
     }
 
     private static void registerAddress(String token){
@@ -196,7 +171,7 @@ public class OrderIntegrationCreationTest extends AbstractIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(jsonBody)
                 .header("Authorization", "Bearer "+ token)
-        .when()
+                .when()
                 .post("/api/addresses");
     }
 
@@ -226,11 +201,11 @@ public class OrderIntegrationCreationTest extends AbstractIntegrationTest {
 
     private static void registerItemProductOne(String token) {
         given()
-                 .contentType(ContentType.JSON)
-                 .body(Map.of("quantity", "5"))
-                 .header("Authorization", "Bearer "+ token)
-         .when()
-                 .post("/api/carts/products/1");
+                .contentType(ContentType.JSON)
+                .body(Map.of("quantity", "5"))
+                .header("Authorization", "Bearer "+ token)
+                .when()
+                .post("/api/carts/products/1");
     }
 
     private static void registerProductTwo(String token) {
@@ -259,7 +234,7 @@ public class OrderIntegrationCreationTest extends AbstractIntegrationTest {
                 .multiPart("highlight", false)
                 .multiPart("file", new File("./src/test/resources/storage/test-controller.jpg"))
                 .contentType("multipart/form-data")
-        .when()
+                .when()
                 .post("/api/products");
     }
 
@@ -277,21 +252,20 @@ public class OrderIntegrationCreationTest extends AbstractIntegrationTest {
                 .contentType(ContentType.JSON)
                 .body(Map.of("name", "Drinks"))
                 .header("Authorization", "Bearer "+ token)
-        .when()
+                .when()
                 .post("/api/categories");
     }
 
     private static String login(Map<String, Object> user) {
         return given()
-                        .contentType(ContentType.JSON)
-                        .body(Map.of("email", user.get("email"), "password", user.get("password")))
+                .contentType(ContentType.JSON)
+                .body(Map.of("email", user.get("email"), "password", user.get("password")))
                 .when()
-                        .post("/api/login")
+                .post("/api/login")
                 .then()
-                        .extract()
-                        .path("token");
+                .extract()
+                .path("token");
 
     }
-
 
 }

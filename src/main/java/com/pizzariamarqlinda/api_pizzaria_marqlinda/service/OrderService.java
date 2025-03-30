@@ -92,7 +92,7 @@ public class OrderService {
         LocalTime officeStartTime = LocalTime.of(configuration.getOpeningHour(), configuration.getOpeningMinute());
         LocalTime endOfficeBusinessHours = LocalTime.of(configuration.getClosingHour(), configuration.getClosingMinute());
         if(LocalTime.now(clock).isBefore(officeStartTime) || LocalTime.now(clock).isAfter(endOfficeBusinessHours))
-            throw new BusinessLogicException("Fora do horário de expediente. Atendemos das "+ configuration.getOpeningHour() + "as" + configuration.getClosingHour());
+            throw new BusinessLogicException("Fora do horário de expediente. Atendemos das "+ configuration.getOpeningHour() + " as " + configuration.getClosingHour());
     }
 
     private void checkBusinessDay(){
