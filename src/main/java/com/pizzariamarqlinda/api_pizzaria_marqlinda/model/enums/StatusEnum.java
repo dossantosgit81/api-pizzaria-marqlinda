@@ -16,15 +16,4 @@ public enum StatusEnum {
 
     private final String name;
 
-    /*VAMOS PENSAR PARA FACILITAR EM DEPARATAMENTALIZAÇÃO
-
-    * MOTORCYCLE_COURIER_USER(ORDER_FOR_DELIVERY, ORDER_OUT_FOR_DELIVERY(Adicionando por ele mesmo. Ele não vai poder ver os pedidos saiu para entrega de outras contas)),
-    * CHEF_USER(ORDER_AWAITING_SERVICE, ORDER_IN_PROGRESS, ORDER_FOR_DELIVERY),
-    * COMMON_USER(Deve ter acesso a lista de seus próprios pedidos),
-    * ADMIN_USER(TODOS OS STATUS)
-    *
-    * Pedidos para entrega
-    Pedidos que sairam para entrega
-    *
-    * */
 }

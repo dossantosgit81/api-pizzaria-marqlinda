@@ -50,6 +50,10 @@ public class Order {
     private User deliveryMan;
 
     @ManyToOne
+    @JoinColumn(name = "ATTENDANT_USER_ID")
+    private User attendant;
+
+    @ManyToOne
     @JoinColumn(name = "PAYMENT_METHOD_ID")
     private PaymentMethod paymentMethod;
 
