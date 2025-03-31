@@ -114,4 +114,9 @@ public class OrderService {
             throw new BusinessLogicException(sb);
         }
     }
+
+    public List<Order> all(){
+        User user = loggedUserService.loggedUser(token);
+        return orderRepository.findOrderByLoggedUser(user.getId());
+    }
 }

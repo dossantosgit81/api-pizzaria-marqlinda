@@ -7,7 +7,7 @@ import java.time.Clock;
 import java.time.ZoneId;
 
 @Configuration
-public class DateConfig {
+public class ClockConfig {
 
     @Bean
     public Clock clock(){
