@@ -9,6 +9,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.StatusEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -115,8 +117,10 @@ public class OrderService {
         }
     }
 
-    public List<Order> all(){
+    public List<OrderResDto> all(){
         User user = loggedUserService.loggedUser(token);
-        return orderRepository.findOrderByLoggedUser(user.getId());
+        List<String> rolesLoggedUser = user.getRoles().stream().map(r -> r.getName().getName()).toList();
+        List<Order> orders = orderRepository.findOrderByLoggedUser(user.getId(), rolesLoggedUser);
+        return orders.stream().map(mapper::entityToOrderResDto).toList();
     }
 }

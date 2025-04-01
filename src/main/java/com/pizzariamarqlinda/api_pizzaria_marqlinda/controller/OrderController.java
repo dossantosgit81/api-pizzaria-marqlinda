@@ -29,7 +29,7 @@ public class OrderController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Order>> findAll(JwtAuthenticationToken token){
+    public ResponseEntity<List<OrderResDto>> findAll(JwtAuthenticationToken token){
         service.setToken(token);
         var res = service.all();
         return ResponseEntity.ok(res);

@@ -12,11 +12,16 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
    
     @Query(
-    "SELECT o FROM Order o LEFT JOIN o.deliveryMan dm JOIN o.user u JOIN dm.roles r "+
-    "WHERE ('DELIVERY_MAN_USER' IN (r.name) AND (o.status = 'ORDER_FOR_DELIVERY') OR (o.status = 'ORDER_OUT_FOR_DELIVERY' AND dm.id = :loggedUserId) )"+
-    "OR ('CHEF_USER' IN (r.name) AND (o.status IN ('ORDER_AWAITING_SERVICE', 'ORDER_IN_PROGRESS')) ) " +
-    "OR ('COMMON_USER' IN (r.name) AND u.id = :loggedUserId) "+
-    "OR ('ADMIN_USER' IN (r.name) )"
+    "SELECT o FROM Order o "+
+    "LEFT JOIN o.deliveryMan deliveryMan "+
+    "LEFT JOIN o.user customer "+
+    "LEFT JOIN deliveryMan.roles rolesdm "+
+    "LEFT JOIN o.attendant attendant "+
+    "LEFT JOIN attendant.roles rolesa "+
+    "WHERE ('DELIVERY_MAN_USER' IN (rolesdm.name) AND (o.status = 'ORDER_FOR_DELIVERY') OR (o.status = 'ORDER_OUT_FOR_DELIVERY' AND deliveryMan.id = :loggedUserId) )"+
+    "OR ('CHEF_USER' IN (rolesa.name) AND (o.status IN ('ORDER_AWAITING_SERVICE', 'ORDER_IN_PROGRESS')) ) " +
+    "OR (customer.id = :loggedUserId) "+
+    "OR ('ADMIN_USER' IN (:rolesLoggedUser) )"
     )
-    List<Order> findOrderByLoggedUser(@Param("loggedUserId") Long loggedUserId);
+    List<Order> findOrderByLoggedUser(@Param("loggedUserId") Long loggedUserId, List<String> rolesLoggedUser);
 }
