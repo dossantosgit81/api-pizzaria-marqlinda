@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -117,10 +119,10 @@ public class OrderService {
         }
     }
 
-    public List<OrderResDto> all(){
+    public Page<OrderResDto> all(Pageable pageable){
         User user = loggedUserService.loggedUser(token);
         List<String> rolesLoggedUser = user.getRoles().stream().map(r -> r.getName().getName()).toList();
-        List<Order> orders = orderRepository.findOrderByLoggedUser(user.getId(), rolesLoggedUser);
-        return orders.stream().map(mapper::entityToOrderResDto).toList();
+        Page<Order> orders = orderRepository.findOrderByLoggedUser(user.getId(), rolesLoggedUser, pageable);
+        return orders.map(mapper::entityToOrderResDto);
     }
 }

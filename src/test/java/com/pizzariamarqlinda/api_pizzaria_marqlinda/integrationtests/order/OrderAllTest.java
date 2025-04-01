@@ -39,7 +39,7 @@ public class OrderAllTest {
 
     @Test
     public void test(){
-        orderRepository.findOrderByLoggedUser(1L);
+
     }
 
 }
