@@ -25,7 +25,7 @@ import static io.restassured.RestAssured.port;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext
-public class OrderVerifyIntegrationTest {
+public class OrderVerifyDatesIntegrationTest {
 
     @Autowired
     private OrderService orderService;

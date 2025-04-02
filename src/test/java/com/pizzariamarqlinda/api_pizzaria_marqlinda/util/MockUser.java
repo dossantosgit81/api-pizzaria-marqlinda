@@ -82,5 +82,19 @@ public class MockUser {
         return req;
     }
 
+    public static Map<String, Object> reqUserDeliveryLogin1(){
+        Map<String, Object> req = new HashMap<>();
+        req.put("email", "deliveryMan@gmail.com");
+        req.put("password", "adminuser");
+        return req;
+    }
+
+    public static Map<String, Object> reqUserDeliveryLogin2(){
+        Map<String, Object> req = new HashMap<>();
+        req.put("email", "delivery2Man@gmail.com");
+        req.put("password", "adminuser");
+        return req;
+    }
+
 
 }

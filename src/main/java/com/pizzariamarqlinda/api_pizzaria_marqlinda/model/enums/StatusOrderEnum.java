@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum StatusEnum {
+public enum StatusOrderEnum {
     ORDER_REFUSED("ORDER_REFUSED"),
     ORDER_AWAITING_SERVICE("ORDER_AWAITING_SERVICE"),
     ORDER_IN_PROGRESS("ORDER_IN_PROGRESS"),

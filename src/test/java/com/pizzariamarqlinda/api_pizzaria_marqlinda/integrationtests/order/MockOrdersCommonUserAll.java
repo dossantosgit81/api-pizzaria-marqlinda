@@ -123,6 +123,28 @@ public class MockOrdersCommonUserAll {
 
     }
 
+    public static String saveUserDeliveryManAndReturnToken1(){
+        var user = MockUser.reqUserDeliveryLogin1();
+        given()
+                .contentType(ContentType.JSON)
+                .body(user)
+                .when()
+                .post("/api/users");
+
+        return login(Map.of("email", user.get("email"), "password", user.get("password")));
+    }
+
+    public static String saveUserDeliveryManAndReturnToken2(){
+        var user = MockUser.reqUserDeliveryLogin2();
+        given()
+                .contentType(ContentType.JSON)
+                .body(user)
+                .when()
+                .post("/api/users");
+
+        return login(Map.of("email", user.get("email"), "password", user.get("password")));
+    }
+
     public static String saveUserCommon1AndReturnToken(){
         var user = MockUser.reqCommonUserValidPost();
         given()

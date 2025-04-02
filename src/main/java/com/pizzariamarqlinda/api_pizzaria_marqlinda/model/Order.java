@@ -1,6 +1,6 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.model;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.StatusEnum;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.StatusOrderEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +24,7 @@ public class Order {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private StatusEnum status;
+    private StatusOrderEnum status;
 
     @Column(name = "DATE_TIME_ORDER")
     private LocalDateTime dateTimeOrder;

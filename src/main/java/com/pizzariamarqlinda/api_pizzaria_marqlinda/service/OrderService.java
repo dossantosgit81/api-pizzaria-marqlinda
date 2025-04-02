@@ -5,11 +5,10 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.OrderMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.*;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderResDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.StatusEnum;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.StatusOrderEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +22,6 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +55,7 @@ public class OrderService {
 
     private Order fillObjectOrder(OrderReqDto orderReqDto, Order orderConverted, User loggedUser){
         Order order = this.orderWithTotal(orderReqDto, orderConverted, loggedUser);
-        order.setStatus(StatusEnum.ORDER_IN_PROGRESS);
+        order.setStatus(StatusOrderEnum.ORDER_AWAITING_SERVICE);
         order.setDateTimeOrder(LocalDateTime.now());
         order.setDeliveryForecast(order.getDateTimeOrder().plusMinutes(configuration.getDeliveryForecast()));
         List<ItemProduct> items = new ArrayList<>(loggedUser.getCart().getItems());
