@@ -75,6 +75,22 @@ public class OrdersFindByIdByUserIntegrationsTest {
 
         int status = response.jsonPath().getInt("status");
         assertEquals(404, status);
+    }
+
+    @Test
+    public void shouldReturnOn403_WhenSearchForDelivery(){
+        String tokenUser1 = MockOrdersCommonUserAll.saveUserDeliveryManAndReturnToken2();
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .header("Authorization", "Bearer "+tokenUser1)
+                .when()
+                .get("/api/orders/1")
+                .then()
+                .log().all()
+                .extract().response();;
+
+        int status = response.jsonPath().getInt("status");
+        assertEquals(403, status);
 
     }
 

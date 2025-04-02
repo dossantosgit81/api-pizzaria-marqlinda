@@ -23,7 +23,7 @@ insert into users_roles (ROLE_ID, USER_ID) values (4, 10);
 insert into users_roles (ROLE_ID, USER_ID) values (1, 11);
 insert into users_roles (ROLE_ID, USER_ID) values (4, 11);
 
-insert into users_roles (ROLE_ID, USER_ID) values (1, 12);
+
 insert into users_roles (ROLE_ID, USER_ID) values (4, 12);
 
 insert into users_roles (ROLE_ID, USER_ID) values (1, 13);
