@@ -21,7 +21,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     "WHERE " +
         "(" +
             "('DELIVERY_MAN_USER' IN (:rolesLoggedUser) AND (o.status = 'ORDER_FOR_DELIVERY')) " +
-            "OR (o.status = 'ORDER_OUT_FOR_DELIVERY' AND deliveryMan.id = :loggedUserId) " +
+            "OR " +
+            "(o.status = 'ORDER_OUT_FOR_DELIVERY' AND deliveryMan.id = :loggedUserId) " +
         ")"+
 
     "OR " +
