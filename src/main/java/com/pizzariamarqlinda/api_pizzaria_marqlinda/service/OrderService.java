@@ -121,6 +121,8 @@ public class OrderService {
         User user = loggedUserService.loggedUser(token);
         List<String> rolesLoggedUser = user.getRoles().stream().map(r -> r.getName().getName()).toList();
         Page<Order> orders = orderRepository.findOrderByLoggedUser(user.getId(), rolesLoggedUser, pageable);
+        if (rolesLoggedUser.contains("ADMIN_USER"))
+            return orderRepository.findAll(pageable).map(mapper::entityToOrderResDto);
         return orders.map(mapper::entityToOrderResDto);
     }
 }

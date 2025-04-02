@@ -17,13 +17,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     "SELECT o FROM Order o "+
     "LEFT JOIN o.deliveryMan deliveryMan "+
     "LEFT JOIN o.user customer "+
-    "LEFT JOIN deliveryMan.roles rolesdm "+
-    "LEFT JOIN o.attendant attendant "+
-    "LEFT JOIN attendant.roles rolesa "+
     "WHERE (('DELIVERY_MAN_USER' IN (:rolesLoggedUser) AND (o.status = 'ORDER_FOR_DELIVERY')) OR (o.status = 'ORDER_OUT_FOR_DELIVERY' AND deliveryMan.id = :loggedUserId) )"+
-    "OR ('CHEF_USER' IN (rolesa.name) AND (o.status IN ('ORDER_AWAITING_SERVICE', 'ORDER_IN_PROGRESS')) ) " +
-    "OR (customer.id = :loggedUserId) "+
-    "OR ('ADMIN_USER' IN (:rolesLoggedUser) )"
+    "OR ('CHEF_USER' IN (:rolesLoggedUser) AND (o.status IN ('ORDER_AWAITING_SERVICE', 'ORDER_IN_PROGRESS')) ) " +
+    "OR (customer.id = :loggedUserId) "
     )
     Page<Order> findOrderByLoggedUser(@Param("loggedUserId") Long loggedUserId, List<String> rolesLoggedUser, Pageable pageable);
 }

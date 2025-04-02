@@ -134,6 +134,17 @@ public class MockOrdersCommonUserAll {
         return login(Map.of("email", user.get("email"), "password", user.get("password")));
     }
 
+    public static String saveUserChefAndReturnToken1(){
+        var user = MockUser.reqUserChef();
+        given()
+                .contentType(ContentType.JSON)
+                .body(user)
+                .when()
+                .post("/api/users");
+
+        return login(Map.of("email", user.get("email"), "password", user.get("password")));
+    }
+
     public static String saveUserDeliveryManAndReturnToken2(){
         var user = MockUser.reqUserDeliveryLogin2();
         given()
@@ -166,4 +177,5 @@ public class MockOrdersCommonUserAll {
 
         return login(Map.of("email", user.get("email"), "password", user.get("password")));
     }
+
 }

@@ -97,4 +97,12 @@ public class MockUser {
     }
 
 
+    public static Map<String, Object> reqUserChef(){
+        Map<String, Object> req = new HashMap<>();
+        req.put("email", "chef1@gmail.com");
+        req.put("password", "adminuser");
+        return req;
+    }
+
+
 }
