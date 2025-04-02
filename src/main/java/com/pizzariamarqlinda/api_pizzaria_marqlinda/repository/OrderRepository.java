@@ -1,6 +1,7 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     "OR (customer.id = :loggedUserId) "
     )
     Page<Order> findOrderByLoggedUser(@Param("loggedUserId") Long loggedUserId, List<String> rolesLoggedUser, Pageable pageable);
+
+    @Query("SELECT o FROM Order o WHERE o.user.id = :idUser AND o.id = :idOrder ")
+    Optional<Order> findByIdUser(@Param("idUser") Long idUser, @Param("idOrder") Long idOrder);
 }

@@ -1,8 +1,10 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.BusinessLogicException;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.OrderMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.*;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CartResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.StatusOrderEnum;
@@ -22,6 +24,7 @@ import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -124,5 +127,13 @@ public class OrderService {
         if (rolesLoggedUser.contains("ADMIN_USER"))
             return orderRepository.findAll(pageable).map(mapper::entityToOrderResDto);
         return orders.map(mapper::entityToOrderResDto);
+    }
+
+    public OrderResDto findById(Long idOrder){
+        User user = loggedUserService.loggedUser(token);
+        Optional<Order> order = orderRepository.findByIdUser(user.getId(), idOrder);
+        if(order.isPresent())
+           return mapper.entityToOrderResDto(order.get());
+        throw new ObjectNotFoundException("Pedido não encontrado. "+idOrder);
     }
 }
