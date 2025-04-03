@@ -2,10 +2,8 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Address;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Order;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.AddressReqDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.AddressResDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderReqDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderResDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.*;
+import org.aspectj.weaver.ast.Or;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -16,5 +14,6 @@ public interface OrderMapper {
 
     Order orderReqDtoToEntity(OrderReqDto orderReqDto);
     OrderResDto entityToOrderResDto(Order order);
+    OrderResUpdateDto entityToOrderResUpdateDto(Order order);
 
 }

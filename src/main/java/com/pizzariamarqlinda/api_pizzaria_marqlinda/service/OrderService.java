@@ -4,13 +4,14 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.BusinessLogicExcep
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.OrderMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.*;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CartResDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderReqDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderResDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.*;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.enums.StatusOrderEnum;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.repository.OrderRepository;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.validation.OrderStatusValidation;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.validation.UserProfileValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +45,8 @@ public class OrderService {
     private final ConfigurationsService configuration;
     private final OrderRepository orderRepository;
     private final ItemProductService itemProductService;
+    private final UserProfileValidation userProfileValidation;
+    private final OrderStatusValidation orderStatusValidation;
 
     @Transactional
     public OrderResDto save(OrderReqDto orderReqDto){
@@ -135,5 +138,37 @@ public class OrderService {
         if(order.isPresent())
            return mapper.entityToOrderResDto(order.get());
         throw new ObjectNotFoundException("Pedido não encontrado. "+idOrder);
+    }
+
+    public OrderResUpdateDto updateOrder(OrderReqUpdateDto orderReqUpdateDto, Long idOrder){
+        User user = loggedUserService.loggedUser(token);
+        Order order = orderRepository.findById(idOrder).orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado."));
+        if(userProfileValidation.isChefUser(user))
+            return this.updateOrderByChef(order, orderReqUpdateDto, user);
+
+        return null;
+    }
+
+    private OrderResUpdateDto updateOrderByDeliveryMan(Order order, OrderReqUpdateDto orderReqUpdateDto, User user){
+        if(orderStatusValidation.isChefUserCanChange(order, orderReqUpdateDto)){
+            this.updateAttendant(order, user);
+            order.setStatus(orderReqUpdateDto.status());
+            return mapper.entityToOrderResUpdateDto(orderRepository.save(order));
+        }
+        throw new BusinessLogicException("Operação não permitida.");
+    }
+
+    private OrderResUpdateDto updateOrderByChef(Order order, OrderReqUpdateDto orderReqUpdateDto, User user){
+        if(orderStatusValidation.isChefUserCanChange(order, orderReqUpdateDto)){
+            this.updateAttendant(order, user);
+            order.setStatus(orderReqUpdateDto.status());
+            return mapper.entityToOrderResUpdateDto(orderRepository.save(order));
+        }
+        throw new BusinessLogicException("Operação não permitida.");
+    }
+
+    private void updateAttendant(Order order, User user) {
+        if(orderStatusValidation.isStatusOrderAwaiting(order))
+            order.setAttendant(user);
     }
 }
