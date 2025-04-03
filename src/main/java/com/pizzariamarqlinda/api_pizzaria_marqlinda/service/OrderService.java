@@ -31,6 +31,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderService {
 
+    private static final String OPERATION_NOT_PERMITTED = "Operação não permitida.";
+
     @Setter
     private JwtAuthenticationToken token;
 
@@ -140,22 +142,35 @@ public class OrderService {
         throw new ObjectNotFoundException("Pedido não encontrado. "+idOrder);
     }
 
+    //TODO refactor abstract factory
+    @Transactional
     public OrderResUpdateDto updateOrder(OrderReqUpdateDto orderReqUpdateDto, Long idOrder){
         User user = loggedUserService.loggedUser(token);
         Order order = orderRepository.findById(idOrder).orElseThrow(() -> new ObjectNotFoundException("Pedido não encontrado."));
+        if(userProfileValidation.isAdminUser(user)){
+            order.setStatus(orderReqUpdateDto.status());
+            return mapper.entityToOrderResUpdateDto(order);
+        }
         if(userProfileValidation.isChefUser(user))
             return this.updateOrderByChef(order, orderReqUpdateDto, user);
+        if(userProfileValidation.isDeliveryManUser(user))
+            return this.updateOrderByDeliveryMan(order, orderReqUpdateDto, user);
 
-        return null;
+        throw new BusinessLogicException(OPERATION_NOT_PERMITTED);
     }
 
     private OrderResUpdateDto updateOrderByDeliveryMan(Order order, OrderReqUpdateDto orderReqUpdateDto, User user){
-        if(orderStatusValidation.isChefUserCanChange(order, orderReqUpdateDto)){
-            this.updateAttendant(order, user);
+        if(orderStatusValidation.isDeliveryManUserCanChange(order, orderReqUpdateDto)){
+            this.updateDeliveryMan(order, user);
             order.setStatus(orderReqUpdateDto.status());
             return mapper.entityToOrderResUpdateDto(orderRepository.save(order));
         }
-        throw new BusinessLogicException("Operação não permitida.");
+        throw new BusinessLogicException(OPERATION_NOT_PERMITTED);
+    }
+
+    private void updateDeliveryMan(Order order, User user) {
+        if(orderStatusValidation.isStatusOrderForDelivery(order))
+            order.setDeliveryMan(user);
     }
 
     private OrderResUpdateDto updateOrderByChef(Order order, OrderReqUpdateDto orderReqUpdateDto, User user){
@@ -164,7 +179,7 @@ public class OrderService {
             order.setStatus(orderReqUpdateDto.status());
             return mapper.entityToOrderResUpdateDto(orderRepository.save(order));
         }
-        throw new BusinessLogicException("Operação não permitida.");
+        throw new BusinessLogicException(OPERATION_NOT_PERMITTED);
     }
 
     private void updateAttendant(Order order, User user) {

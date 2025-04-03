@@ -21,13 +21,15 @@ public class OrderStatusValidation {
     }
 
     public boolean isDeliveryManUserCanChange(Order order, OrderReqUpdateDto orderReqUpdateDto){
-        boolean isOrderAwaiting = order.getStatus().getName().equals(StatusOrderEnum.ORDER_AWAITING_SERVICE.getName());
-        boolean isOrderReqUpdateDtoProgress = orderReqUpdateDto.status().getName().equals(StatusOrderEnum.ORDER_IN_PROGRESS.getName());
+        boolean isOrderForDelivery = order.getStatus().getName().equals(StatusOrderEnum.ORDER_FOR_DELIVERY.getName());
+        boolean isOrderReqUpdateDtoOutForDelivery = orderReqUpdateDto.status().getName().equals(StatusOrderEnum.ORDER_OUT_FOR_DELIVERY.getName());
 
-        boolean isOrderProgress = order.getStatus().getName().equals(StatusOrderEnum.ORDER_IN_PROGRESS.getName());
-        boolean isOrderReqUpdateDtoForDelivery = orderReqUpdateDto.status().getName().equals(StatusOrderEnum.ORDER_FOR_DELIVERY.getName());
+        boolean isOrderOutForDelivery = order.getStatus().getName().equals(StatusOrderEnum.ORDER_OUT_FOR_DELIVERY.getName());
+        boolean isOrderReqUpdateDtoForDelivered = orderReqUpdateDto.status().getName().equals(StatusOrderEnum.ORDER_DELIVERED.getName());
 
-        return (isOrderAwaiting && isOrderReqUpdateDtoProgress) || (isOrderProgress && isOrderReqUpdateDtoForDelivery);
+        boolean isCanceled = isOrderOutForDelivery && orderReqUpdateDto.status().getName().equals(StatusOrderEnum.PROBLEM_WITH_DELIVERY.getName());
+
+        return (isOrderForDelivery && isOrderReqUpdateDtoOutForDelivery) || (isOrderOutForDelivery && isOrderReqUpdateDtoForDelivered) || isCanceled;
     }
 
     public boolean isStatusOrderAwaitingOrProgress(Order order){
@@ -37,6 +39,10 @@ public class OrderStatusValidation {
 
     public boolean isStatusOrderAwaiting(Order order){
         return StatusOrderEnum.ORDER_AWAITING_SERVICE.getName().equals(order.getStatus().getName());
+    }
+
+    public boolean isStatusOrderForDelivery(Order order){
+        return StatusOrderEnum.ORDER_FOR_DELIVERY.getName().equals(order.getStatus().getName());
     }
 
     public boolean isOrderForDeliveryOrOrOrderOutForDelivery(Order order){

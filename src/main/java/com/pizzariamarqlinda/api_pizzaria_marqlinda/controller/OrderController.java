@@ -1,9 +1,6 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderReqDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.OrderResDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.PageResponseDto;
-import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.*;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +45,13 @@ public class OrderController {
         service.setToken(token);
         OrderResDto order = service.findById(id);
         return ResponseEntity.ok(order);
+    }
+
+    @PutMapping(value = "{id}",produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<OrderResUpdateDto> update(@Valid @RequestBody OrderReqUpdateDto orderReqUpdateDto, @PathVariable("id") Long id, JwtAuthenticationToken token){
+        service.setToken(token);
+        var res = service.updateOrder(orderReqUpdateDto, id);
+        return ResponseEntity.ok(res);
     }
 
 }

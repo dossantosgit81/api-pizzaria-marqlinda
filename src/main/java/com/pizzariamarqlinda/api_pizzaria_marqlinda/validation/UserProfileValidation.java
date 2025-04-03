@@ -21,7 +21,7 @@ public class UserProfileValidation {
     }
 
     public boolean isAdminUser (User user){
-        return this.isUserWithValidRole(user, ProfilesUserEnum.DELIVERY_MAN_USER);
+        return this.isUserWithValidRole(user, ProfilesUserEnum.ADMIN_USER);
     }
 
     private boolean isUserWithValidRole (User user, ProfilesUserEnum profilesUserEnum){
