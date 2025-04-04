@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -80,29 +82,33 @@ public class UserService {
     }
 
     @Transactional
-    public void updateRolesUserId(Long idUserReq, UserUpdateRoleReqDto userUpdateRoleReqDto){
+    public UserResDto updateRolesUserId(String email, UserUpdateRoleReqDto userUpdateRoleReqDto){
+        email = URLDecoder.decode(email, StandardCharsets.UTF_8);
         User loggedUser = this.loggedUser.loggedUser(token);
         if(userProfileValidation.isAdminUser(loggedUser)){
-            User userSearched = repository.findById(idUserReq).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado."));
-            this.verifyUserIsUserRequest(idUserReq, userSearched);
+            User userSearched = repository.findByEmail(email).orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado."));
+            this.verifyUserIsUserRequest(userSearched, loggedUser);
             List<String> rolesExisting = roleService.all().stream().map(obj -> obj.name().getName()).toList();
             List<String> currentRolesUser = userSearched.getRoles().stream().map(obj -> obj.getName().getName()).toList();
             List<ProfilesUserEnum> rolesReq = userUpdateRoleReqDto.roles().stream().map(RoleReqDto::getName).toList();
             this.verifyUserHasAllRolesRequest(rolesExisting, currentRolesUser);
-            this.updateUserWithNewRoles(rolesReq, userSearched);
-        }
-        throw new BusinessLogicException("Algo deu errado na sua solicitação. Comece o processo novamente. ");
+            var result = this.updateUserWithNewRoles(rolesReq, userSearched);
+            return mapper.entityToUserResDto(result);
+        }else
+            throw new BusinessLogicException("Algo deu errado com sua solicitação. Verifique seu login ou sua senha e tente novamente.");
+
     }
 
-    private void updateUserWithNewRoles(List<ProfilesUserEnum> rolesReq, User userSearched) {
+    private User updateUserWithNewRoles(List<ProfilesUserEnum> rolesReq, User userSearched) {
         Set<Role> newRoles = new TreeSet<>(Comparator.comparing(Role::getId));
         rolesReq.forEach(p -> {
-            newRoles.add(roleService.findByNameCommonUser(p));
+            newRoles.add(roleService.findByName(p));
         });
         if(!newRoles.isEmpty()) {
             userSearched.setRoles(newRoles);
-            repository.save(userSearched);
-        }
+            return repository.save(userSearched);
+        }else
+            throw new BusinessLogicException("Lista permissões deve está preenchida.");
     }
 
     private void verifyUserHasAllRolesRequest(List<String> rolesExisting, List<String> currentRolesUser) {
@@ -110,8 +116,8 @@ public class UserService {
             throw new BusinessLogicException("Usuário já possui todas as roles existentes.");
     }
 
-    private void verifyUserIsUserRequest(Long idUserReq, User userSearched) {
-        if(userSearched.getId().equals(idUserReq))
+    private void verifyUserIsUserRequest(User userSearched, User loggedUser) {
+        if(loggedUser.getEmail().equals(userSearched.getEmail()))
             throw new BusinessLogicException("Operação não permitida.");
     }
 

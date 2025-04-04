@@ -6,6 +6,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserUpdateRoleReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -50,13 +51,13 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping(value = "{idUser}/roles")
+    @PutMapping(value = "/roles")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
-    public ResponseEntity<UserResDto> updateRolesUser(@PathVariable("idUser") Long idUser,
-                                                      UserUpdateRoleReqDto userUpdateRoleReqDto,
+    public ResponseEntity<UserResDto> updateRolesUser(@PathParam("email") String email,
+                                                      @RequestBody UserUpdateRoleReqDto userUpdateRoleReqDto,
                                                       JwtAuthenticationToken token){
         service.setToken(token);
-        UserResDto user = service.findById(idUser);
-        return ResponseEntity.ok(user);
+        var result = service.updateRolesUserId(email, userUpdateRoleReqDto);
+        return ResponseEntity.ok(result);
     }
 }

@@ -1,5 +1,6 @@
 package com.pizzariamarqlinda.api_pizzaria_marqlinda.service;
 
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.exception.ObjectNotFoundException;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.RoleMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.mapper.UserMapper;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.Role;
@@ -28,6 +29,15 @@ public class RoleService  {
         }
         return role.get();
     }
+
+    public Role findByName(ProfilesUserEnum profile){
+        var role = repository.findByName(profile);
+        if(role.isPresent()){
+            return role.get();
+        }
+        throw new ObjectNotFoundException("Permissão não encontrada.");
+    }
+
 
     public List<RoleResDto> all() {
         List<Role> roles = repository.findAll();
