@@ -3,6 +3,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.PageResponseDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
+import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserUpdateRoleReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,18 @@ public class UserController {
 
     @GetMapping(value = "{id}",produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<UserResDto> findById(@PathVariable("id") Long id, JwtAuthenticationToken token){
-        UserResDto user = service.findById(id, token);
+        service.setToken(token);
+        UserResDto user = service.findById(id);
+        return ResponseEntity.ok(user);
+    }
+
+    @PutMapping(value = "{idUser}/roles")
+    @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
+    public ResponseEntity<UserResDto> updateRolesUser(@PathVariable("idUser") Long idUser,
+                                                      UserUpdateRoleReqDto userUpdateRoleReqDto,
+                                                      JwtAuthenticationToken token){
+        service.setToken(token);
+        UserResDto user = service.findById(idUser);
         return ResponseEntity.ok(user);
     }
 }
