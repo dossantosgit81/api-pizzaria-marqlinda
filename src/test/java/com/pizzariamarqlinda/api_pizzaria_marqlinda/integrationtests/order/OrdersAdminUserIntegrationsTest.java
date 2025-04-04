@@ -59,7 +59,7 @@ public class OrdersAdminUserIntegrationsTest {
                .extract().response();
 
         int totalElements = response.jsonPath().getInt("totalElements");
-        int totalElementsWithImportSqlAndThisTest = 6;
+        int totalElementsWithImportSqlAndThisTest = 7;
         assertEquals(totalElementsWithImportSqlAndThisTest, totalElements);
 
     }

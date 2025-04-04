@@ -20,9 +20,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     "LEFT JOIN o.user customer "+
     "WHERE " +
         "(" +
-            "('DELIVERY_MAN_USER' IN (:rolesLoggedUser) AND (o.status = 'ORDER_FOR_DELIVERY')) " +
-            "OR " +
-            "(o.status = 'ORDER_OUT_FOR_DELIVERY' AND deliveryMan.id = :loggedUserId) " +
+            "(" +
+                "('DELIVERY_MAN_USER' IN (:rolesLoggedUser) AND (o.status = 'ORDER_FOR_DELIVERY')) " +
+                "OR " +
+                "(o.status = 'ORDER_OUT_FOR_DELIVERY' AND deliveryMan.id = :loggedUserId) " +
+            ")" +
+            "AND o.delivery = TRUE "+
         ")"+
 
     "OR " +
