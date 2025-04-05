@@ -53,7 +53,7 @@ public class UserController {
 
     @PutMapping(value = "/roles")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
-    public ResponseEntity<UserResDto> updateRolesUser(@PathParam("email") String email,
+    public ResponseEntity<UserResDto> updateRolesUser(@RequestParam(value = "email") String email,
                                                       @RequestBody UserUpdateRoleReqDto userUpdateRoleReqDto,
                                                       JwtAuthenticationToken token){
         service.setToken(token);

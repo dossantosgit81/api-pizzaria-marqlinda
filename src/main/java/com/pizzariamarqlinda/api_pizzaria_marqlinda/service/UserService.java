@@ -113,7 +113,7 @@ public class UserService {
 
     private void verifyUserHasAllRolesRequest(List<String> rolesExisting, List<String> currentRolesUser) {
         if(rolesExisting.equals(currentRolesUser))
-            throw new BusinessLogicException("Usuário já possui todas as roles existentes.");
+            throw new BusinessLogicException("Usuário já possui todas as roles enviadas.");
     }
 
     private void verifyUserIsUserRequest(User userSearched, User loggedUser) {

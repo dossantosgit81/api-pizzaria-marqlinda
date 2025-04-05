@@ -133,7 +133,8 @@ public class UserServiceTest {
         doReturn(adminUser).when(validatorLoggedUser).loggedUser(token);
         doReturn(true).when(validatorLoggedUser).isUserHasRoleAdmin(userArgumentCaptor.capture());
         assertThrows(ObjectNotFoundException.class, ()->{
-            service.findById(1L, token);
+            service.setToken(token);
+            service.findById(1L);
         });
     }
 
@@ -143,7 +144,8 @@ public class UserServiceTest {
         doReturn(Optional.of(adminUser)).when(repository).findById(longArgumentCaptor.capture());
         doReturn(adminUser).when(validatorLoggedUser).loggedUser(token);
         doReturn(true).when(validatorLoggedUser).isUserHasRoleAdmin(userArgumentCaptor.capture());
-        var result = service.findById(1L, token);
+        service.setToken(token);
+        var result = service.findById(1L);
         assertNotNull(result.id());
         assertEquals(UserResDto.class, result.getClass());
     }
@@ -155,7 +157,8 @@ public class UserServiceTest {
         doReturn(savedUser).when(validatorLoggedUser).loggedUser(token);
         doReturn(false).when(validatorLoggedUser).isUserHasRoleAdmin(userArgumentCaptor.capture());
         doReturn(true).when(validatorLoggedUser).userIsOwnerResource(userArgumentCaptor.capture(), userArgumentCaptor.capture());
-        var result = service.findById(1L, token);
+        service.setToken(token);
+        var result = service.findById(1L);
         assertNotNull(result.id());
         assertEquals(UserResDto.class, result.getClass());
     }
@@ -167,7 +170,8 @@ public class UserServiceTest {
         doReturn(savedUser).when(validatorLoggedUser).loggedUser(token);
         doReturn(false).when(validatorLoggedUser).isUserHasRoleAdmin(userArgumentCaptor.capture());
         assertThrows(AccessDeniedException.class, ()->{
-            service.findById(1L, token);
+            service.setToken(token);
+            service.findById(1L);
         });
     }
 
@@ -178,7 +182,8 @@ public class UserServiceTest {
         doReturn(User.builder().id(2L).build()).when(validatorLoggedUser).loggedUser(token);
         doReturn(false).when(validatorLoggedUser).isUserHasRoleAdmin(userArgumentCaptor.capture());
         assertThrows(AccessDeniedException.class, ()->{
-            service.findById(1L, token);
+            service.setToken(token);
+            service.findById(1L);
         });
     }
 
