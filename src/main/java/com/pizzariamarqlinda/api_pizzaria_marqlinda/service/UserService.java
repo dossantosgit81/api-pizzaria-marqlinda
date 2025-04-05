@@ -91,7 +91,6 @@ public class UserService {
             List<String> rolesExisting = roleService.all().stream().map(obj -> obj.name().getName()).toList();
             List<String> currentRolesUser = userSearched.getRoles().stream().map(obj -> obj.getName().getName()).toList();
             List<ProfilesUserEnum> rolesReq = userUpdateRoleReqDto.roles().stream().map(RoleReqDto::getName).toList();
-            this.verifyUserHasAllRolesRequest(rolesExisting, currentRolesUser);
             var result = this.updateUserWithNewRoles(rolesReq, userSearched);
             return mapper.entityToUserResDto(result);
         }else
@@ -109,11 +108,6 @@ public class UserService {
             return repository.save(userSearched);
         }else
             throw new BusinessLogicException("Lista permissões deve está preenchida.");
-    }
-
-    private void verifyUserHasAllRolesRequest(List<String> rolesExisting, List<String> currentRolesUser) {
-        if(rolesExisting.equals(currentRolesUser))
-            throw new BusinessLogicException("Usuário já possui todas as roles enviadas.");
     }
 
     private void verifyUserIsUserRequest(User userSearched, User loggedUser) {

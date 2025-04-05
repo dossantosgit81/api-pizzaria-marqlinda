@@ -72,25 +72,6 @@ public class UserIntegrationAddRoleAUserTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void shouldReturnError_WhenUserHasRoles(){
-        String tokenAdmin = MockOrdersCommonUserAll.login(MockUser.reqUserAdminLogin());
-        var response = given()
-                .contentType(ContentType.JSON)
-                .header("Authorization", "Bearer "+tokenAdmin)
-                .body(bodyRolesRepeated())
-                .param("email", "    deliveryMan@gmail.com")
-                .when()
-                .put("/api/users/roles")
-                .then()
-                .extract()
-                .response();
-        String message = response.jsonPath().getString("message");
-        int status = response.jsonPath().getInt("status");
-        assertEquals("Usuário já possui todas as roles enviadas.", message);
-        assertEquals(409, status);
-    }
-
-    @Test
     public void shouldReturnError_WhenUserRolesNotExists(){
         String tokenAdmin = MockOrdersCommonUserAll.login(MockUser.reqUserAdminLogin());
         var response =
@@ -150,12 +131,9 @@ public class UserIntegrationAddRoleAUserTest extends AbstractIntegrationTest {
 
     public Map<String, Object> bodyRolesRepeated(){
         Map<String, Object> role1 = new HashMap<>();
-        role1.put("name", "DELIVERY_MAN_USER");
+        role1.put("name", "COMMON_USER");
 
-        Map<String, Object> role2 = new HashMap<>();
-        role2.put("name", "COMMON_USER");
-
-        List<Map<String, Object>> roles = Arrays.asList(role1, role2);
+        List<Map<String, Object>> roles = List.of(role1);
 
         Map<String, Object> body = new HashMap<>();
         body.put("roles", roles);
