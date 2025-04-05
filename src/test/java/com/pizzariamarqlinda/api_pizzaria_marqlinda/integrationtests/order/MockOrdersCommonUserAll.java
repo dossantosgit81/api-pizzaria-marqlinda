@@ -178,4 +178,15 @@ public class MockOrdersCommonUserAll {
         return login(Map.of("email", user.get("email"), "password", user.get("password")));
     }
 
+    public static String saveUserCommon3AndReturnToken(){
+        var user = MockUser.reqCommonUserValidPost3();
+        given()
+                .contentType(ContentType.JSON)
+                .body(user)
+                .when()
+                .post("/api/users");
+
+        return login(Map.of("email", user.get("email"), "password", user.get("password")));
+    }
+
 }
