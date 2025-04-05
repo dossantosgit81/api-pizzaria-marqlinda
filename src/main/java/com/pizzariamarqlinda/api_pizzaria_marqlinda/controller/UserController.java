@@ -51,9 +51,16 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping(value = "/search/{email}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<UserResDto> findByEmail(@PathVariable("email") String email, JwtAuthenticationToken token){
+        service.setToken(token);
+        UserResDto user = service.findByEmailWithValidationsPermission(email);
+        return ResponseEntity.ok(user);
+    }
+
     @PutMapping(value = "/roles")
     @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
-    public ResponseEntity<UserResDto> updateRolesUser(@RequestParam(value = "email") String email,
+    public ResponseEntity<UserResDto> updateRolesUser(@RequestParam("email") String email,
                                                       @RequestBody UserUpdateRoleReqDto userUpdateRoleReqDto,
                                                       JwtAuthenticationToken token){
         service.setToken(token);

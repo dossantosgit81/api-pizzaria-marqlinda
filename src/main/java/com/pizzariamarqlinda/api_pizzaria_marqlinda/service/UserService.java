@@ -132,4 +132,15 @@ public class UserService {
         throw new AccessDeniedException("Acesso negado.");
     }
 
+    public UserResDto findByEmailWithValidationsPermission(String email) {
+        email = URLDecoder.decode(email, StandardCharsets.UTF_8);
+        User userReqSearched = findByEmail(email);
+        var loggedUser = this.loggedUser.loggedUser(token);
+        if(this.loggedUser.isUserHasRoleAdmin(loggedUser) || (this.loggedUser.userIsOwnerResource(loggedUser, userReqSearched)))
+            return mapper.entityToUserResDto(userReqSearched);
+        else
+            throw new AccessDeniedException("Acesso negado.");
+    }
+
+
 }
