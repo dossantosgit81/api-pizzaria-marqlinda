@@ -9,5 +9,6 @@ public record ProductResDto(
         Long id,
         String description,
         BigDecimal price,
-        Boolean highlight) {
+        Boolean highlight,
+        String imgUrl) {
 }
