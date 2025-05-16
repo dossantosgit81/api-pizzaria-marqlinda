@@ -1,0 +1,39 @@
+services:
+  postgre:
+    image: postgres:16.8
+    ports: 
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: ${DATASOURCE_PASS}
+      POSTGRES_USER: ${DATASOURCE_USER} 
+    volumes:
+      - db_api:/var/lib/postgresql/data
+    networks:
+      - pizzariamqlinda_net
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: fael23/api-pizzaria:v1
+    ports:
+      - 8080:8080
+    environment:
+      DATASOURCE_URL: ${DB_URL}
+      DATASOURCE_USERNAME: ${DATASOURCE_USER}
+      DATASOURCE_PASSWORD: ${DATASOURCE_PASS}
+      JWT_PRIVATE_KEY: ${PRIVATE_KEY}
+      JWT_PUBLIC_KEY: ${PUB_KEY}
+      SPRING_PROFILES_ACTIVE: ${PROFILES_ACTIVE}
+      UPLOAD_DIR: /var/lib/app/uploads
+    volumes:
+      - files_api:/var/lib/app/uploads
+    networks:
+      - pizzariamqlinda_net
+volumes:
+  db_api:
+  files_api:
+networks:
+  pizzariamqlinda_net:
+    driver: bridge
+    
+  
