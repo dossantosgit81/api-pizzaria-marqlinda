@@ -17,12 +17,11 @@ ENV JWT_PUBLIC_KEY=''
 
 EXPOSE 8080
 
-COPY entrypoint.sh /entrypoint.sh
+COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-RUN addgroup -S dev && \ 
-    adduser -S -G dev -h /home/default -s /bin/sh default
-USER default
+RUN addgroup -g 1000 appgroup && adduser -D -u 1000 -G appgroup appuser
+RUN apk add --no-cache su-exec
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["java", "-jar", "api.jar"]

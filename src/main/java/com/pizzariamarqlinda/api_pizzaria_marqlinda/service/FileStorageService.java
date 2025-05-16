@@ -48,6 +48,7 @@ public class FileStorageService {
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return new WrapFile(fileName, targetLocation.toString());
         }catch (IOException e){
+            System.out.println("Erro no log da api" + e);
             throw new FileStorageException("Não foi possivel armazenar o arquivo. Tente novamente.");
         }
     }
