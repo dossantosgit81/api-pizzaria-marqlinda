@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Set;
 
@@ -47,15 +49,25 @@ public class ProductController {
     }
 
     @GetMapping("{id}/image")
-    public ResponseEntity<Resource> file (@PathVariable Long id){
-        Resource image = service.getFile(id);
-        if(image.exists() && image.isReadable()){
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\""+image.getFilename() + "\"")
+    public ResponseEntity<Resource> file(@PathVariable Long id) {
+        try {
+            Resource image = service.getFile(id);
+
+            if (image.exists() && image.isReadable()) {
+                String contentType = Files.probeContentType(image.getFile().toPath());
+                if (contentType == null) {
+                    contentType = "application/octet-stream"; 
+                }
+
+                return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType)) 
                     .body(image);
+            }
+
+            return ResponseEntity.notFound().build();
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
         }
-        return ResponseEntity.internalServerError().build();
     }
 
     @DeleteMapping("{id}")
