@@ -28,8 +28,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers(HttpMethod.POST, "/api/users").permitAll();
                     authorize.requestMatchers(HttpMethod.GET, "/api/products").permitAll();
-                    authorize.requestMatchers(HttpMethod.GET, "/api/products/categories/{id}").permitAll();
-                    authorize.requestMatchers(HttpMethod.GET, "/api/products/{id}/image").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/products/categories/*").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/products/*/image").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/api/login").permitAll();
                     authorize.anyRequest().authenticated();
                 })
