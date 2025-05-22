@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public record ProductResDto(
         Long id,
         String description,
+        String details,
         BigDecimal price,
         Boolean highlight) {
 }

@@ -21,11 +21,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityConfiguration(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers(HttpMethod.POST, "/api/users").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/products").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/products/categories/{id}").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/api/products/{id}/image").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/api/login").permitAll();
                     authorize.anyRequest().authenticated();
                 })
