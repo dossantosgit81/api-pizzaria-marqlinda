@@ -48,7 +48,8 @@ public class LoginService {
         Set<String> scopes = new HashSet<>();
         for (Role role : user.getRoles())
             scopes.add(role.getName().getName());
-        var expiresIn = 300L;
+        // 5 dias
+        var expiresIn = 432000L;
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("mybackend")
                 .subject(user.getId().toString())
