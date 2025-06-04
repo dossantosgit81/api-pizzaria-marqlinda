@@ -32,4 +32,10 @@ public class CartController {
     public ResponseEntity<Integer> getCountItems(JwtAuthenticationToken token){
         return ResponseEntity.ok(service.getQuantityItemsCart(token));
     }
+
+    @GetMapping("/products")
+    public ResponseEntity<CartResDto> all(JwtAuthenticationToken token){
+        var res = service.all(token);
+        return ResponseEntity.ok(res);
+    }
 }

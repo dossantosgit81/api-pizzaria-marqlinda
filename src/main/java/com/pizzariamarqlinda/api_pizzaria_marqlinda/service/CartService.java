@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -49,6 +50,12 @@ public class CartService {
             return mapper.entityToCartResDto(user.getCart());
         }
         throw new ObjectNotFoundException("Item não encontrado. "+idItemCart);
+    }
+
+    public CartResDto all(JwtAuthenticationToken token){
+        User loggedUser = loggedUserService.loggedUser(token);
+        BigDecimal total = loggedUser.getCart().getTotal();
+        return new CartResDto(total, itemCartService.all(loggedUser.getCart()));
     }
 
     public int getQuantityItemsCart(JwtAuthenticationToken token){
