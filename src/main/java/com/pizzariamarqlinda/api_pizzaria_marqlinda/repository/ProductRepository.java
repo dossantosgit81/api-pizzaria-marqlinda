@@ -12,6 +12,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findAll(Pageable pageable);
 
+    @Query("SELECT p FROM Product p WHERE p.highlight = :highlight")
+    Page<Product> findAll(Pageable pageable, Boolean highlight);
+
     @Query("SELECT p FROM Product p WHERE p.category.id = ?1 ")
     Page<Product> findByCategory (Long categoryId, Pageable pageable);
 }

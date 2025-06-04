@@ -54,9 +54,13 @@ public class ProductService {
        throw new ObjectNotFoundException("Produto não encontrado.");
     }
 
-    public Page<ProductResDto> all(Pageable pageable){
-        var products = repository.findAll(pageable);
-        return products.map(mapper::entityToProductResDto);
+    public Page<ProductResDto> all(Pageable pageable, Boolean highlight){
+        if(highlight != null)
+             return repository.findAll(pageable, highlight)
+                     .map(mapper::entityToProductResDto);
+        else
+            return repository.findAll(pageable)
+                    .map(mapper::entityToProductResDto);
     }
 
     public Page<ProductResDto> findByCategory(Long idCategory, Pageable pageable){

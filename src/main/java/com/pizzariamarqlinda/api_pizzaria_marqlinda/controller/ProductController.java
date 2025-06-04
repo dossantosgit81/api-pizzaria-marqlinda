@@ -81,9 +81,10 @@ public class ProductController {
     public ResponseEntity<PageResponseDto<ProductResDto>> all(@RequestParam int pageNumber,
                                                    @RequestParam int pageSize,
                                                    @RequestParam(defaultValue = "id") String sortBy,
-                                                   @RequestParam(defaultValue = "ASC") String direction){
+                                                   @RequestParam(defaultValue = "ASC") String direction,
+                                                   @RequestParam(required = false) Boolean highlight){
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
-        var res = service.all(PageRequest.of(pageNumber, pageSize, sort));
+        var res = service.all(PageRequest.of(pageNumber, pageSize, sort), highlight);
         return ResponseEntity.ok(new PageResponseDto<>(res));
     }
 
