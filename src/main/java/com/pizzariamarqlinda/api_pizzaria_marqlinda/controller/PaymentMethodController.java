@@ -17,7 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@RequestMapping("/api/payments-method")
+@RequestMapping("/api/payments-methods")
 @RestController
 @RequiredArgsConstructor
 public class PaymentMethodController {
@@ -32,7 +32,7 @@ public class PaymentMethodController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<PaymentMethodDto>> findAll(JwtAuthenticationToken token){
+    public ResponseEntity<List<PaymentMethodDto>> findAll(){
         var res = service.all();
         return ResponseEntity.ok().body(res);
     }
