@@ -15,6 +15,12 @@ ENV DATASOURCE_PASSWORD=''
 ENV JWT_PRIVATE_KEY=''
 ENV JWT_PUBLIC_KEY=''
 
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
+    echo "America/Sao_Paulo" > /etc/timezone
+
+RUN date
+
 EXPOSE 8080
 
 COPY ./entrypoint.sh /entrypoint.sh
