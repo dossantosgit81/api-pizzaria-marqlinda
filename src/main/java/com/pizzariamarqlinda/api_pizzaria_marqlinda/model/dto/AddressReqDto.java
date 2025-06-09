@@ -11,5 +11,5 @@ public record AddressReqDto(@NotBlank(message = "Campo deve ser preenchido.") St
                             @NotNull(message = "Campo deve ser preenchido.")  Integer number,
                             @NotBlank(message = "Campo deve ser preenchido.") String zipcode,
                             @NotBlank(message = "Campo deve ser preenchido.") String neighborhood,
-                            String title) {
+                            @NotBlank(message = "Campo deve ser preenchido.") String title) {
 }
