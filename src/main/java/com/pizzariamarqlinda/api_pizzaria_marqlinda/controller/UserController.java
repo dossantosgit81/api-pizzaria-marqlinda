@@ -5,6 +5,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.UserUpdateRoleReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.net.URI;
 @RequestMapping("/api/users")
 @RestController
 @RequiredArgsConstructor
+@Tag(name =  "User")
 public class UserController {
 
     private final UserService service;

@@ -3,6 +3,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.CartResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ItemProductReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.CartService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/carts")
 @RestController
 @RequiredArgsConstructor
+@Tag(name =  "Cart")
 public class CartController {
 
     private final CartService service;

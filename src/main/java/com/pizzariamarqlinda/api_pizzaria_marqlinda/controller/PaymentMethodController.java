@@ -5,6 +5,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.AddressResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.PaymentMethodDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.AddressService;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.PaymentMethodService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/payments-methods")
 @RestController
 @RequiredArgsConstructor
+@Tag(name =  "Payment Method")
 public class PaymentMethodController {
 
     private final PaymentMethodService service;

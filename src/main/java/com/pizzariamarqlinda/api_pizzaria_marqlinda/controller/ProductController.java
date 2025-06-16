@@ -4,6 +4,7 @@ import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.PageResponseDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.ProductResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.ProductService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
+@Tag(name =  "Product")
 public class ProductController {
 
     private final ProductService service;

@@ -2,6 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.RoleResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.RoleService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('SCOPE_ADMIN_USER')")
+@Tag(name =  "Role")
 public class RoleController {
 
     private final RoleService service;

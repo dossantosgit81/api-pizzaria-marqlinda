@@ -3,6 +3,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.*;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.CategoryService;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -21,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/categories")
 @RestController
 @RequiredArgsConstructor
+@Tag(name =  "Category")
 public class CategoryController {
 
     private final CategoryService service;

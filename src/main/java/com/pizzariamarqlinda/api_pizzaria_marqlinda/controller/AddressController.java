@@ -2,6 +2,8 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.*;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.AddressService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -19,10 +21,12 @@ import java.util.List;
 @RequestMapping("/api/addresses")
 @RestController
 @RequiredArgsConstructor
+@Tag(name =  "Addresses")
 public class AddressController {
 
     private final AddressService service;
 
+    @Operation(summary = "Create", description = "Create new address")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> create(@Valid @RequestBody AddressReqDto addressReqDto, JwtAuthenticationToken token, UriComponentsBuilder uriBuilder){
         service.save(addressReqDto, token);

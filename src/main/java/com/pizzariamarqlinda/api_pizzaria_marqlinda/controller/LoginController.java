@@ -3,6 +3,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.LoginReqDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.LoginResDto;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.LoginService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/login")
 @RequiredArgsConstructor
+@Tag(name =  "Login")
 public class LoginController {
 
     private final LoginService service;

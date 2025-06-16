@@ -2,6 +2,7 @@ package com.pizzariamarqlinda.api_pizzaria_marqlinda.controller;
 
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.model.dto.*;
 import com.pizzariamarqlinda.api_pizzaria_marqlinda.service.OrderService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/api/orders")
 @RestController
 @RequiredArgsConstructor
+@Tag(name =  "Order")
 public class OrderController {
 
     private final OrderService service;
