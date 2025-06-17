@@ -20,6 +20,9 @@ Este projeto nasceu após assistir a uma live de um professor que trouxe uma ref
 - Swagger (documentação da API)
 - Docker (para facilitar o setup do ambiente)
 - Flyway
+- Testcontainers
+- Jacoco
+- Junit
 
 ---
 
