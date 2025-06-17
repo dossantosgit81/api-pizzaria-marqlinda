@@ -5,7 +5,8 @@ services:
       - 5432:5432
     environment:
       POSTGRES_PASSWORD: ${DATASOURCE_PASS}
-      POSTGRES_USER: ${DATASOURCE_USER} 
+      POSTGRES_USER: ${DATASOURCE_USER}
+      POSTGRES_DB: ${DATASOURCE_DB}
     volumes:
       - db_api:/var/lib/postgresql/data
     networks:
