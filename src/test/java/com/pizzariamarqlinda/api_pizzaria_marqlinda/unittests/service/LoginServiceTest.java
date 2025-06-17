@@ -70,7 +70,7 @@ class LoginServiceTest {
 
         assertNotNull(response);
         assertNotNull(response.token());
-        assertEquals(300L, response.expiresIn());
+        assertEquals(432000L, response.expiresIn());
     }
 
     @Test
