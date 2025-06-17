@@ -57,7 +57,7 @@ http://localhost:8080/swagger-ui/index.html
    docker compose --env-file .env up -d
    ```
 
-5. Crie o banco de dados
+5. Crie o banco de dados(Se necessário)
     ```
     create database pizzaria_marqlinda;
    ```
