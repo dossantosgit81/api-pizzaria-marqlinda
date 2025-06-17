@@ -19,6 +19,7 @@ Este projeto nasceu após assistir a uma live de um professor que trouxe uma ref
 - PostgreSQL
 - Swagger (documentação da API)
 - Docker (para facilitar o setup do ambiente)
+- Flyway
 
 ---
 
@@ -27,10 +28,6 @@ Este projeto nasceu após assistir a uma live de um professor que trouxe uma ref
 A documentação da API está disponível via Swagger.  
 Após rodar o projeto, acesse:
 
-```
-http://localhost:8080/swagger-ui.html
-```
-ou
 ```
 http://localhost:8080/swagger-ui/index.html
 ```
@@ -47,8 +44,8 @@ http://localhost:8080/swagger-ui/index.html
 
 1. Clone este repositório:
    ```bash
-   git clone https://github.com/seu-usuario/seu-repositorio.git
-   cd seu-repositorio
+   git clone https://github.com/dossantosgit81/api-pizzaria-marqlinda.git
+   cd api-pizzaria-marqlinda
    ```
 
 2. Crie um arquivo chamado `.env` na raiz do projeto.
@@ -97,7 +94,7 @@ Basta criar um arquivo chamado `.env` e copiar os dados dele.
 
 - 🔸 Cadastro de produtos
 - 🔸 Gerenciamento de pedidos
-- 🔸 Consulta de status dos pedidos
+- 🔸 Consulta de status dos pedidos(Motoboy, CHEF, Cliente)
 - 🔸 Documentação interativa via Swagger
 - 🔸 Banco de dados PostgreSQL rodando em container Docker
 - 🔸 API REST desenvolvida em Java com Spring Boot
