@@ -23,6 +23,7 @@ Este projeto nasceu após assistir a uma live de um professor que trouxe uma ref
 - Testcontainers
 - Jacoco
 - Junit
+-  [Modelagem do  banco de dados](https://drive.google.com/file/d/1Y18QDkaBZ95L9rDoasHtd-RwClV3Lzm5/view) 
 
 ---
 
